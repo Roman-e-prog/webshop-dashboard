@@ -1,14 +1,12 @@
 import React from 'react'
-import styled from 'styled-components';
-import Navbar from '../components/Navbar';
+import styled from 'styled-components'
 const Container = styled.div`
-    width:100%;
-    background:var(--white);
+  width:100%;
 `;
 const Home:React.FC = () => {
   return (
     <Container>
-      <Navbar/>
+      Home
     </Container>
   )
 }
