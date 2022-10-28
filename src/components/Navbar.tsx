@@ -12,6 +12,7 @@ const Container = styled.nav`
     background:var(--coffee);
     display:flex;
     padding:20px;
+    margin-bottom:10px;
 `;
 const Logo = styled.div`
   flex:1;
