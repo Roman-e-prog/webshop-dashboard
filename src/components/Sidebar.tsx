@@ -15,11 +15,17 @@ const Container = styled.div`
 const Menue = styled.ul`
     display:flex;
     flex-direction:column;
+    width:100%;
+    
 `;
 const MenueItem = styled.li`
     display:flex;
     align-items:center;
-    color:var(--darkgray);
+    color:var(--darkGray);
+    width:100%;
+    padding:10px;
+    cursor: pointer;
+    font-size:20px;
 `;
 const Sidebar = () => {
   return (
@@ -27,103 +33,95 @@ const Sidebar = () => {
       <Menue>
         <MenueItem>
             <FaHome/>
-            <Link to="/" className="link">Home</Link>
+            <Link to="/" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Home</Link>
         </MenueItem>
 
         <MenueItem>
             <HiTrendingUp/>
-            <Link to="/sales" className="link">Sales</Link>
+            <Link to="/sales" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Sales</Link>
         </MenueItem>
 
         <MenueItem>
             <MdTimeline/>
-            <Link to="/analytics" className="link">Analytics</Link>
+            <Link to="/analytics" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Analytics</Link>
         </MenueItem>
 
         <MenueItem>
             <FaMoneyBillWaveAlt/>
-            <Link to="/transactions" className="link">Transaktionen</Link>
+            <Link to="/transactions" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Transaktionen</Link>
         </MenueItem>
 
         <MenueItem>
             <MdOutlineBarChart/>
-            <Link to="/reports" className="link">Reports</Link>
+            <Link to="/reports" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Reports</Link>
         </MenueItem>
 
         <MenueItem>
             <MdMailOutline/>
-            <Link to="/mail" className="link">Mail</Link>
+            <Link to="/mail" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Mail</Link>
         </MenueItem>
 
         <MenueItem>
             <MdOutlineFeedback/>
-            <Link to="/feedback" className="link">Feedback</Link>
+            <Link to="/feedback" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Feedback</Link>
         </MenueItem>
 
         <MenueItem>
             <MdOutlineNotificationImportant/>
-            <Link to="/messages" className="link">Nachrichten</Link>
+            <Link to="/messages" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Nachrichten</Link>
         </MenueItem>
 
         <MenueItem>
             <MdOutlineManageAccounts/>
-            <Link to="/manage" className="link">Manage</Link>
+            <Link to="/manage" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Manage</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/user" className="link">User</Link>
+            <Link to="/user" className="link" style={{color:"var(--darkGray)"}}>User</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/products" className="link">Produkte</Link>
+            <Link to="/products" className="link" style={{color:"var(--darkGray)"}}>Produkte</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/productlistChild" className="link">Produkt Menue Kinder</Link>
+            <Link to="/productlistChild" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Kinder</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/productlistWomen" className="link">Produkt Menue Damen</Link>
+            <Link to="/productlistWomen" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Damen</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/productlistMen" className="link">Produkt Menue Herren</Link>
+            <Link to="/productlistMen" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Herren</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/productlistSportschuhe" className="link">Produkt Menue Sportschuhe</Link>
+            <Link to="/productlistSportschuhe" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Sportschuhe</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/productlistSneaker" className="link">Produkt Menue Sneaker</Link>
+            <Link to="/productlistSneaker" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Sneaker</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/cardImages" className="link">Bilder Frontseite Produktrubriken</Link>
+            <Link to="/cardImages" className="link" style={{color:"var(--darkGray)"}}>Bilder Frontseite Produktrubriken</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/sneakerImage" className="link">Hintergrundbild Sneaker</Link>
+            <Link to="/sneakerImage" className="link" style={{color:"var(--darkGray)"}}>Hintergrundbild Sneaker</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/newsletterBackground" className="link">Newsletter Hintergrund</Link>
+            <Link to="/newsletterBackground" className="link" style={{color:"var(--darkGray)"}}>Newsletter Hintergrund</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/productlistChild" className="link">Produkt Menue Kinder</Link>
+            <Link to="/sliderImage" className="link" style={{color:"var(--darkGray)"}}>Slider Bilder</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/sliderImage" className="link">Slider Bilder</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/descriptionItems" className="link">Text Frontseite</Link>
-        </MenueItem>
-        
-        <MenueItem>
-            <Link to="/productlistChild" className="link">Produkt Menue Kinder</Link>
+            <Link to="/descriptionItems" className="link" style={{color:"var(--darkGray)"}}>Text Frontseite</Link>
         </MenueItem>
       </Menue>
     </Container>
