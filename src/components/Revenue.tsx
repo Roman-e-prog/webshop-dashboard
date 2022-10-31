@@ -42,12 +42,12 @@ const Revenue = () => {
         <Hint>Verglichen mit letztem Monat</Hint>
       </Einnahmen>
       <Sales>
-        <Title>Einnahmen</Title>
+        <Title>Sales</Title>
         <Amount>Summe</Amount>
         <Hint>Verglichen mit letztem Monat</Hint>
       </Sales>
       <Kosten>
-        <Title>Einnahmen</Title>
+        <Title>Kosten</Title>
         <Amount>Summe</Amount>
         <Hint>Verglichen mit letztem Monat</Hint>
       </Kosten>
