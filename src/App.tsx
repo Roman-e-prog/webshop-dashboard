@@ -24,6 +24,9 @@ import SneakerImage from './pages/SneakerImage';
 import SliderImages from './pages/SliderImages';
 import DescriptionItems from './pages/DescriptionItems';
 import NewsletterBackground from './pages/NewsletterBackground';
+import Login from './pages/Login';
+import { useAppSelector } from './app/hooks';
+import { RootState } from './app/store';
 const Container = styled.div`
   width:100%;
 `;
@@ -39,16 +42,21 @@ const ContentWrapper = styled.div`
   padding:20px;
 `;
 const App:React.FC = ()=> {
+    const selector = useAppSelector((state:RootState)=>state.auth);
+    const admin = selector.user?.isAdmin;
   return (
    
     <Container>
     <Router>
+      <Routes>
+        <Route path="/" element={<Login/>}/>
+        {admin && (
+    <>
       <Navbar/>
       <Wrapper>
         <Sidebar/>
         <ContentWrapper>
-            <Routes>
-              <Route path="/" element={<Home/>}/>
+              <Route path="/home" element={<Home/>}/>
               <Route path="/sales" element={<Sales/>}/>
               <Route path="/analytics" element={<Analytics/>}/>
               <Route path="/transactions" element={<Transactions/>}/>
@@ -69,10 +77,11 @@ const App:React.FC = ()=> {
               <Route path="/sliderImage" element={<SliderImages/>}/>
               <Route path="/newsletterBackground" element={<NewsletterBackground/>}/>
               <Route path="/descriptionItems" element={<DescriptionItems/>}/>
-            </Routes>
-          
           </ContentWrapper>
         </Wrapper>
+        </>
+        )}
+        </Routes>
       </Router>
     </Container>
   );
