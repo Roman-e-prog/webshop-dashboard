@@ -2,6 +2,11 @@ import React from 'react'
 import styled from 'styled-components';
 import {FaShoePrints} from 'react-icons/fa'
 import {IoMdNotificationsOutline, IoMdSettings} from 'react-icons/io'
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { RootState } from '../app/store';
+import {AiOutlineLogout} from 'react-icons/ai'
+import { logout, reset } from '../features/authSlice';
+import { useNavigate } from 'react-router-dom';
 const Container = styled.nav`
     width:100%;
     height:80px;
@@ -45,6 +50,15 @@ const Menue = styled.div`
 `;
 
 const Navbar:React.FC = () => {
+  const dispatch = useAppDispatch();
+  const selector = useAppSelector((state:RootState)=>state.auth);
+  const navigate = useNavigate();
+  const {user} = selector;
+  const onLogout = ()=>{
+    dispatch(logout());
+    dispatch(reset());
+    navigate('/');
+  }
   return (
     <Container>
       <Logo>
@@ -52,8 +66,9 @@ const Navbar:React.FC = () => {
         <FaShoePrints/>
         <h2>Dashboard</h2>
       </Logo>
-      <Greeting>Hallo Placeholder</Greeting>
+      <Greeting>{`Hallo ${user!.username}`}</Greeting>
       <Menue>
+        {user && <AiOutlineLogout style={{color:"var(--white)", fontWeight:"600", marginRight:"20px", fontSize:"26px"}} onClick={onLogout} title="Logout"/>}
         <IoMdNotificationsOutline style={{marginRight:"20px"}}/>
         <IoMdSettings style={{marginRight:"20px"}}/>
       </Menue>

@@ -25,8 +25,25 @@ const LoginForm = styled.form`
 const FormGroup = styled.div`
     display:flex;
     flex-direction:column;
+    margin: 0 10px;
+
+    & label {
+        margin:5px 0;
+    }
+    & input {
+        padding:5px 0;
+    }
 `;
-const SubmitButton = styled.button``;
+const SubmitButton = styled.button`
+    margin-top: 10px;
+    margin-left:10px;
+    width:200px;
+    padding:10px;
+    background:var(--coffee);
+    color:white;
+    border:none;
+    cursor: pointer;
+`;
 const Login = () => {
         const dispatch = useAppDispatch();
         const selector = useSelector((state:RootState)=>state.auth);
@@ -43,7 +60,7 @@ useEffect(()=>{
     if(isError){
         toast.error(message);
     }
-    if(isSuccess || user){
+    if(user?.isAdmin){
         navigate("/home");
     }
     return ()=>{
@@ -78,8 +95,8 @@ const onSubmit = (e:React.FormEvent)=>{
             <input type="email" name="email" id="email" required  value={email} onChange={handleChange}/>
         </FormGroup>
         <FormGroup>
-            <label htmlFor='password'>Benutzername</label>
-            <input type="text" name="password" id="password" required  value={password} onChange={handleChange}/>
+            <label htmlFor='password'>Password</label>
+            <input type="password" name="password" id="password" required  value={password} onChange={handleChange}/>
         </FormGroup>
         <SubmitButton onClick={onSubmit}>Login</SubmitButton>
       </LoginForm>

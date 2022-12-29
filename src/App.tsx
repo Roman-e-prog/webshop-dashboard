@@ -1,4 +1,5 @@
 import React from 'react';
+import {Fragment} from 'react';
 import Home from './pages/Home';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
@@ -27,6 +28,9 @@ import NewsletterBackground from './pages/NewsletterBackground';
 import Login from './pages/Login';
 import { useAppSelector } from './app/hooks';
 import { RootState } from './app/store';
+import UserDisplay from './pages/UserDisplay';
+import ProductEdit from './pages/ProductEdit';
+import DescriptionItemsEdit from './pages/DescriptionItemsEdit';
 const Container = styled.div`
   width:100%;
 `;
@@ -49,13 +53,15 @@ const App:React.FC = ()=> {
     <Container>
     <Router>
       <Routes>
-        <Route path="/" element={<Login/>}/>
-        {admin && (
-    <>
+      <Route path="/" element={<Login/>}/>
+      </Routes>
+      {admin && 
+    <Fragment>
       <Navbar/>
       <Wrapper>
         <Sidebar/>
         <ContentWrapper>
+          <Routes>
               <Route path="/home" element={<Home/>}/>
               <Route path="/sales" element={<Sales/>}/>
               <Route path="/analytics" element={<Analytics/>}/>
@@ -77,11 +83,15 @@ const App:React.FC = ()=> {
               <Route path="/sliderImage" element={<SliderImages/>}/>
               <Route path="/newsletterBackground" element={<NewsletterBackground/>}/>
               <Route path="/descriptionItems" element={<DescriptionItems/>}/>
+              {/* Edits */}
+              <Route path="/showUser/:id" element={<UserDisplay/>}/>
+              <Route path="/showProduct/:id" element={<ProductEdit/>}/>
+              <Route path="/showDescriptionItem/:id" element={<DescriptionItemsEdit/>}/>
+              </Routes>
           </ContentWrapper>
         </Wrapper>
-        </>
-        )}
-        </Routes>
+        </Fragment>
+        }
       </Router>
     </Container>
   );

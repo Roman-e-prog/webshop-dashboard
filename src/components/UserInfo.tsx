@@ -1,5 +1,11 @@
-import React from 'react'
+import React, {useEffect, useCallback} from 'react'
 import styled from 'styled-components'
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { RootState } from '../app/store';
+import {getAllUser} from '../features/user/userSlice'
+import { Link } from 'react-router-dom';
+import {toast} from 'react-toastify';
+import Spinner from './Spinner';
 const Container = styled.div`
     flex:1;
 `;
@@ -8,15 +14,32 @@ const Title = styled.h3`
     margin-bottom:10px;
 `;
 const ContentWrapper = styled.div`
+    width:100%;
     display:flex;
     align-items:center;
+    flex-direction:column;
+
+    & div{
+    display:flex;
+    align-items:center;
+    }
 `;
-const Name = styled.span`
-    font-size:20px;
-`;
-const Town = styled.span`
-    font-size:20px;
-    margin:0 10px;
+const Table = styled.table`
+  width:100%;
+  & thead, tbody{
+    width:100%;
+  }
+  & th{
+    text-align:center;
+    margin-bottom:5px
+  }
+  & td{
+    text-align:left;
+    margin-top:5px;
+  }
+  & #btn{
+    text-align:center
+  }
 `;
 const ShowButton = styled.button`
     background: var(--coffee);
@@ -24,19 +47,53 @@ const ShowButton = styled.button`
     padding:5px;
     border:none;
     font-size:10px;
-
 `;
 const UserInfo = () => {
+  const dispatch = useAppDispatch();
+  const selector = useAppSelector((state:RootState)=>state.user);
+  const {allUser, isLoading, isError, message} = selector;
+  const initFetch = useCallback(()=>{
+    dispatch(getAllUser());
+  }, [dispatch]);
+
+  useEffect(()=>{
+    if(isError){
+      toast.error(message)
+    }
+    initFetch();
+  }, [initFetch, isError, message]);
+  if(isLoading){
+    return <Spinner/>
+  }
   return (
     <Container>
       <Title>Neue Benutzer</Title>
       <ContentWrapper>
-        <Name>Username</Name>
-        <Town>Benutzerstadt</Town>
-        <ShowButton>Benutzer anzeigen</ShowButton>
+          <Table>
+            <thead>
+            <tr>
+                <th>Kundename</th>
+                <th>Stadt</th>
+                <th>Kundendaten</th>
+              </tr>
+              </thead>
+              <tbody>
+               {allUser && allUser.map((item)=>(
+                <tr key={item._id}>
+                  <td>{item.nachname}</td>
+                  <td>{item.city}</td>
+                  <td id="btn"><ShowButton><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Benutzer anzeigen</Link></ShowButton></td>
+                </tr>
+               ))}
+            
+            </tbody>
+          </Table>
+          
+       
+       
       </ContentWrapper>
     </Container>
   )
 }
 
-export default UserInfo
+export default UserInfo; 

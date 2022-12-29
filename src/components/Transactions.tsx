@@ -36,18 +36,20 @@ const Transactions = () => {
       <Title>Neueste Transaktionen</Title>
       <ContentWrapper>
         <DataTable>
-            <tr>
-                <th>KUNDE</th>
-                <th>DATUM</th>
-                <th>UMSATZ</th>
-                <th>Status</th>
-            </tr>
-            <tr>
-            <td>Placeholder</td>
-            <td>28.10.22</td>
-            <td>€ 122</td>
-            <td><button>Status anzeigen</button></td>
-            </tr>
+          <tbody>
+              <tr>
+                  <th>KUNDE</th>
+                  <th>DATUM</th>
+                  <th>UMSATZ</th>
+                  <th>Status</th>
+              </tr>
+              <tr>
+              <td>Placeholder</td>
+              <td>28.10.22</td>
+              <td>€ 122</td>
+              <td><button>Status anzeigen</button></td>
+              </tr>
+            </tbody>
         </DataTable>
       </ContentWrapper>
     </Container>
