@@ -31,6 +31,7 @@ import { RootState } from './app/store';
 import UserDisplay from './pages/UserDisplay';
 import ProductEdit from './pages/ProductEdit';
 import DescriptionItemsEdit from './pages/DescriptionItemsEdit';
+import SliderItemsEdit from './pages/SliderItemsEdit';
 const Container = styled.div`
   width:100%;
 `;
@@ -87,6 +88,7 @@ const App:React.FC = ()=> {
               <Route path="/showUser/:id" element={<UserDisplay/>}/>
               <Route path="/showProduct/:id" element={<ProductEdit/>}/>
               <Route path="/showDescriptionItem/:id" element={<DescriptionItemsEdit/>}/>
+              <Route path="/showSliderItem/:id" element={<SliderItemsEdit/>}/>
               </Routes>
           </ContentWrapper>
         </Wrapper>

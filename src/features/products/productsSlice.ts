@@ -83,6 +83,7 @@ export const deleteProduct = createAsyncThunk<Product, string, AsyncThunkConfig>
 })
 export const getProduct = createAsyncThunk<Product[], string, AsyncThunkConfig>('product/find', async (Id, thunkAPI)=>{
     try{
+      console.log(Id);
         return await productsService.getProduct(Id);
     } catch(error:any){
         const message =

@@ -83,12 +83,13 @@ const Products = () => {
   const lastIndex = currentPage * productsPerPage;
   const firstIndex = lastIndex - productsPerPage;
   const currentProducts = product.slice(firstIndex, lastIndex);
-  
+  console.log(currentProducts);
   //search
   const [searchValue, setSearchValue]= useState('');
   const filteredProduct = product.filter((item:object)=>{
     return Object.values(item).join('').toLowerCase().includes(searchValue.toLowerCase())
   }).slice(firstIndex, lastIndex);
+  console.log(filteredProduct);
   //sort
   const handleDefault = ()=>{
     setProduct([...product].sort((a,b)=>a.createdAt > b.createdAt ? -1 : 1));

@@ -10,7 +10,6 @@ const createProduct = async (productData:FormData, token:string)=>{
         }
     }
     const response =  await axios.post(API_URL, productData, config);
-    console.log(response.data);
     return response.data;
 }
 const updateProduct = async (updateProductData:UpdateProductData, token:string)=>{

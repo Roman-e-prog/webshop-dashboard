@@ -111,6 +111,7 @@ const ProductEdit = () => {
       toast.error(message)
     }
     dispatch(getProduct(id!));
+    console.log(id);
   }, [dispatch,isError, message, id]);
 
   const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
@@ -176,7 +177,9 @@ const updatePreview = (file:File)=>{
     productData.append("sizes", JSON.stringify(formdata.sizes));
     productData.append("inStock", formdata.inStock);
     productData.append("image", filedata.image!)
-    
+    for(let value of productData){
+      console.log(value);
+    }
     const updateProductData:UpdateProductData = {
       productData: productData,
       id:id!,
@@ -224,11 +227,11 @@ const updatePreview = (file:File)=>{
               <input type="text" name="currency" id="currency" defaultValue={currency} onChange={(e)=>setFormdata({...formdata, currency: e.target.value})}/>
             </FormGroup>
             <FormGroup>
-            <label htmlFor='colors'>Farben</label>
+            <label htmlFor='colors'>Colors</label>
               <input type="text" name="colors" id="colors" defaultValue={colors} onChange={(e)=>setFormdata({...formdata, colors: [e.target.value]})}/>
             </FormGroup>
             <FormGroup>
-            <label htmlFor='sizes'>Größen</label>
+            <label htmlFor='sizes'>Sizes</label>
               <input type="text" name="sizes" id="sizes" defaultValue={sizes} onChange={(e)=>setFormdata({...formdata, sizes: [e.target.value]})}/>
             </FormGroup>
             <FormGroup>
