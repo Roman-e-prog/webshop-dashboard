@@ -147,9 +147,9 @@ const updatePreview = (file:File)=>{
     setPreview(reader.result as string);
   }
 }
-
   useEffect(()=>{
     if(product){
+      console.log(product);
       setFormdata({
         title:product.title,
         producer:product.producer,
