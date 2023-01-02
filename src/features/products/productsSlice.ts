@@ -83,7 +83,6 @@ export const deleteProduct = createAsyncThunk<Product, string, AsyncThunkConfig>
 })
 export const getProduct = createAsyncThunk<Product[], string, AsyncThunkConfig>('product/find', async (Id, thunkAPI)=>{
     try{
-      console.log(Id);
         return await productsService.getProduct(Id);
     } catch(error:any){
         const message =
@@ -115,7 +114,7 @@ export const productsSlice = createSlice({
     reducers:{
         reset:(state)=>initialState,
     },
-    extraReducers:(builder)=>{
+    extraReducers(builder) {
       builder
       .addCase(createProduct.pending, (state)=>{
         state.isLoading = true; 
