@@ -1,9 +1,10 @@
 import React from 'react'
-import styled from 'styled-components'
-import {useEffect, useState } from 'react'
+import styled from 'styled-components';
+import {useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { toast } from 'react-toastify';
-import { getAllProducts } from '../features/products/productsSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { getAllProducts} from '../features/products/productsSlice';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import Pagination from '../components/Pagination';
@@ -55,70 +56,65 @@ const SortButton = styled.button`
   margin-right:2px;
   border:none;
 `;
-//interface 
-// interface Props{
-//   product:object[],
-//   setProduct:  React.Dispatch<React.SetStateAction<object[]>>
-// }
 const Products = () => {
   const dispatch = useAppDispatch();
-  const selector = useAppSelector((state)=>state.product);
-  const {allProducts, isError, isLoading, message} = selector;
+const allProducts = useAppSelector((state)=>state.products.allProducts);
+const isError = useAppSelector((state)=>state.products.isError);
+const isLoading = useAppSelector((state)=>state.products.isLoading);
+const message = useAppSelector((state)=>state.products.message);
   useEffect(() => {
     if(isError){
       toast.error(message)
     }
     dispatch(getAllProducts())
   }, [dispatch, isError, message])
-  const [product, setProduct] = useState<any[]>([]);
+  const [products, setProducts] = useState<any>([]);
 
   useEffect(()=>{
-    if(allProducts){
-      setProduct(allProducts)
+    if(allProducts.length){
+      setProducts(allProducts)
     }
-  }, [allProducts])
+  }, [allProducts]);
   
-  //pagination
+
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(5);
   const lastIndex = currentPage * productsPerPage;
   const firstIndex = lastIndex - productsPerPage;
-  const currentProducts = product.slice(firstIndex, lastIndex);
+  const currentProducts = products.slice(firstIndex, lastIndex);
   //search
   const [searchValue, setSearchValue]= useState('');
-  const filteredProduct = product.filter((item:object)=>{
+  const filteredProduct = products.filter((item:object)=>{
     return Object.values(item).join('').toLowerCase().includes(searchValue.toLowerCase())
   }).slice(firstIndex, lastIndex);
   //sort
   const handleDefault = ()=>{
-    setProduct([...product].sort((a,b)=>a.createdAt > b.createdAt ? -1 : 1));
+    setProducts([...products].sort((a,b)=>a.createdAt < b.createdAt ? -1 : 1));
   }
   const handleNew = ()=>{
-    setProduct([...product].sort((a,b)=>a.createdAt < b.createdAt ? -1 :1));
+    setProducts([...products].sort((a,b)=>a.createdAt > b.createdAt ? -1 :1));
   }
   const handleAlphabet = ()=>{
-    setProduct(
-      [...product].sort((a,b)=>{
+    setProducts(
+      [...products].sort((a,b)=>{
         if(a.categories[0] < b.categories[0]){
           return -1;
         }
         else{
           return 1;
         }
-      })
-    )
+      }))
   }
   const handleProducer = ()=>{
-    setProduct(
-      [...product].sort((a,b)=>{
+    setProducts(
+      [...products].sort((a,b)=>{
         if(a.producer < b.producer){
           return -1;
         }
         else{
           return 1;
         }
-      })
-    )
+      }))
   }
   if(isLoading){
     return <Spinner/>
@@ -146,13 +142,13 @@ const Products = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredProduct ? filteredProduct.map((item)=>(
+          {filteredProduct ? filteredProduct.map((item:any)=>(
             <tr key={item._id}>
               <td>{item.title}</td>
               <td>{item.categories.map((item:string[], index:number)=>(
-                <span key={index}>{item}</span>
+                <span key={index}>{item} </span>
               ))}</td>
-              <td><img src={item.image} alt={item.categories.join()} title={item.categories.join()} style={{width:"75px", height:"50px"}}/></td>
+              <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
               <td>{item.producer}</td>
               <td>{item._id}</td>
               <td>{item.inStock}</td>
@@ -160,13 +156,13 @@ const Products = () => {
               <td id="btn"><button><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}>Anzeigen</Link></button></td>
             </tr>
           ))
-          : currentProducts.map((item)=>(
+          : currentProducts.map((item:any)=>(
             <tr key={item._id}>
               <td>{item.title}</td>
               <td>{item.categories.map((item:string[], index:number)=>(
-                <span key={index}>{item}</span>
+                <span key={index}>{item} </span>
               ))}</td>
-              <td><img src={item.image} alt={item.categories.join()} title={item.categories.join()} style={{width:"200px", height:"100px"}}/></td>
+              <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
               <td>{item._id}</td>
               <td>{item.inStock}</td>
               <td>{`${item.price} ${item.currency}`}</td>
@@ -177,12 +173,13 @@ const Products = () => {
         </tbody>
       </Table>
       <Pagination
-        total={product.length}
+        total={products.length}
         limit={productsPerPage}
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
       />
       <CreateProduct/>
+      <ToastContainer />
     </Container>
   )
 }
