@@ -4,7 +4,7 @@ import productsService from './productsService'
 import {UpdateProductData} from '../../pages/ProductEdit'
 export interface Product{
     _id?:string,
-    id:string,
+    id?:string,
     image:string,
     title:string,
     producer:string,
@@ -123,7 +123,7 @@ export const productsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.product.push(action.payload);
-        console.log(action.payload);
+        console.log(action.payload)
       })
       .addCase(createProduct.rejected, (state,action:any)=>{
         state.isLoading = false;
@@ -137,6 +137,7 @@ export const productsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.product = action.payload;
+        console.log(action.payload);
       })
       .addCase(updateProduct.rejected, (state, action:any)=>{
         state.isLoading = false;
@@ -163,6 +164,7 @@ export const productsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.product = action.payload;
+        console.log(action.payload);
       })
       .addCase(getProduct.rejected, (state, action:any)=>{
         state.isLoading = false;
@@ -176,6 +178,7 @@ export const productsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.allProducts = action.payload;
+        console.log(action.payload);
       })
       .addCase(getAllProducts.rejected, (state, action:any)=>{
         state.isLoading = false;

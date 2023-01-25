@@ -8,6 +8,10 @@
 .link{
   text-decoration:none;
 }
+.active{
+  background:var(--coffee);
+  color:var(--white);
+  }
 ul{
   list-style: none;
   margin: 0;

@@ -1,11 +1,13 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent} from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import {useNavigate, useParams} from 'react-router-dom'
-import { toast } from 'react-toastify';
-import { getProduct, deleteProduct, updateProduct } from '../features/products/productsSlice';
+// import { ToastContainer, toast } from 'react-toastify';
+//   import 'react-toastify/dist/ReactToastify.css';
+import { getProduct, deleteProduct, updateProduct, reset} from '../features/products/productsSlice';
 import Spinner from '../components/Spinner';
+
 
 const Container = styled.div`
     width:100%;
@@ -102,18 +104,19 @@ export interface UpdateProductData{
 }
 const ProductEdit = () => {
   const dispatch = useAppDispatch();
-  const selector = useAppSelector((state)=>state.product);
-  const {product, isError, isLoading, message}:any = selector;
+const product:any = useAppSelector((state)=>state.products.product);
+const isError = useAppSelector((state)=>state.products.isError);
+const isLoading = useAppSelector((state)=>state.products.isLoading);
+const message = useAppSelector((state)=>state.products.message);
   const navigate = useNavigate();
   const {id} = useParams();
   useEffect(() => {
     if(isError){
-      toast.error(message)
+      window.alert(message)
     }
     dispatch(getProduct(id!));
-    console.log(id);
   }, [dispatch,isError, message, id]);
-
+  
   const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
     title:"",
     producer:"",
@@ -126,6 +129,22 @@ const ProductEdit = () => {
     inStock:"",
   })
   const {title, producer, categories, desc, price, currency, colors, sizes,inStock} = formdata;
+  
+  useEffect(()=>{
+    if(product){
+      setFormdata({
+        title:product.title,
+        producer:product.producer,
+        categories:product.categories,
+        desc:product.desc,
+        price:product.price,
+        currency:product.currency,
+        colors:product.colors,
+        sizes:product.sizes,
+        inStock:product.inStock,
+      })
+    }
+  }, [product])
 //img
 const [filedata, setFiledata] = useState<FileData>({
   image:null
@@ -147,23 +166,7 @@ const updatePreview = (file:File)=>{
     setPreview(reader.result as string);
   }
 }
-  useEffect(()=>{
-    if(product){
-      console.log(product);
-      setFormdata({
-        title:product.title,
-        producer:product.producer,
-        categories:product.categories,
-        desc:product.desc,
-        price:product.price,
-        currency:product.currency,
-        colors:product.colors,
-        sizes:product.sizes,
-        inStock:product.inStock,
-      })
-    }
-  }, [product])
-
+ 
   const onSubmit = (e:React.FormEvent)=>{
     e.preventDefault();
     const productData = new FormData();
@@ -177,17 +180,19 @@ const updatePreview = (file:File)=>{
     productData.append("sizes", JSON.stringify(formdata.sizes));
     productData.append("inStock", formdata.inStock);
     productData.append("image", filedata.image!)
-    for(let value of productData){
-      console.log(value);
-    }
+   
     const updateProductData:UpdateProductData = {
       productData: productData,
       id:id!,
     }
     dispatch(updateProduct(updateProductData));
-
+    return ()=>{
+      dispatch(reset());
+    }
   }
-
+  const handleDelete = ()=>{
+    dispatch(deleteProduct(product._id));
+  }
   if(isLoading){
     return <Spinner/>
   }
@@ -253,9 +258,10 @@ const updatePreview = (file:File)=>{
             <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
           </ButtonGroup>
         </Form>
-        <DeleteButton onClick={()=>dispatch(deleteProduct(product._id))}>Löschen</DeleteButton>
+        <DeleteButton onClick={handleDelete}>Löschen</DeleteButton>
     </Container>
   )
 }
+
 
 export default ProductEdit

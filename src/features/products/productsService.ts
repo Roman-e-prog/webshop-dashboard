@@ -10,6 +10,7 @@ const createProduct = async (productData:FormData, token:string)=>{
         }
     }
     const response =  await axios.post(API_URL, productData, config);
+    console.log(response.data)
     return response.data;
 }
 const updateProduct = async (updateProductData:UpdateProductData, token:string)=>{
@@ -20,6 +21,7 @@ const updateProduct = async (updateProductData:UpdateProductData, token:string)=
         }
     }
     const response = await axios.put(API_URL+updateProductData.id, updateProductData.productData, config);
+    console.log(response.data)
     return response.data;
 }
 const deleteProduct = async (id:string, token:string)=>{
@@ -29,16 +31,18 @@ const deleteProduct = async (id:string, token:string)=>{
         }
     }
     const response = await axios.delete(API_URL + id, config);
+    console.log(response.data)
     return response.data;
 }
 const getProduct = async (id:string)=>{
     const getUrl = `find/${id}`;
     const response = await axios.get(API_URL+getUrl);
+    console.log(response.data)
     return response.data;
 }
 const getAllProducts = async ()=>{
-    const getallUrl = 'find/'
-    const response = await axios.get(API_URL+ getallUrl);
+    const response = await axios.get(API_URL+ 'find');
+    console.log(response.data)
     return response.data;
 }
 const productsService = {

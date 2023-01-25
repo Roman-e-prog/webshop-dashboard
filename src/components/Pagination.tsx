@@ -1,5 +1,6 @@
-import React from 'react';
+import React  from 'react';
 import styled from 'styled-components';
+
 const Container = styled.div`
     width:90%;
     margin:10px auto
@@ -12,7 +13,7 @@ const PaginationItem = styled.li`
   min-width:30px;
   display:flex;
   justify-content:center;
-  color:var(--fontColor);
+  align-items:center;
 `;
 const PaginationButton = styled.li`
   background: var(--coffee);
@@ -20,6 +21,7 @@ const PaginationButton = styled.li`
   margin: 0 5px;
   padding:2px;
 `;
+
 const Pagination = (props:{total:number, limit:number,setCurrentPage:React.Dispatch<React.SetStateAction<number>>, currentPage:number}) => {
     const pages = [];
     const totalPages = Math.ceil(props.total/props.limit);
@@ -31,7 +33,7 @@ const Pagination = (props:{total:number, limit:number,setCurrentPage:React.Dispa
       <PaginationBar>
         <PaginationButton onClick={()=>props.setCurrentPage(props.currentPage-1)}>Zurück</PaginationButton>
         {pages.map((item)=>(
-            <PaginationItem key={item} onClick={()=>props.setCurrentPage(item)}>{item}</PaginationItem>
+            <PaginationItem key={item} onClick={()=>props.setCurrentPage(item)} className={item == props.currentPage ? "active" : ""}>{item}</PaginationItem>
         ))}
         <PaginationButton onClick={()=>props.setCurrentPage(props.currentPage+1)}>Vor</PaginationButton>
       </PaginationBar>
