@@ -27,11 +27,11 @@ import DescriptionItems from './pages/DescriptionItems';
 import NewsletterBackground from './pages/NewsletterBackground';
 import Login from './pages/Login';
 import { useAppSelector } from './app/hooks';
-import { RootState } from './app/store';
 import UserDisplay from './pages/UserDisplay';
 import ProductEdit from './pages/ProductEdit';
 import DescriptionItemsEdit from './pages/DescriptionItemsEdit';
 import SliderItemsEdit from './pages/SliderItemsEdit';
+import NotFound from './pages/NotFound';
 const Container = styled.div`
   width:100%;
 `;
@@ -47,8 +47,7 @@ const ContentWrapper = styled.div`
   padding:20px;
 `;
 const App:React.FC = ()=> {
-    const selector = useAppSelector((state:RootState)=>state.auth);
-    const admin = selector.user?.isAdmin;
+    const admin = useAppSelector((state)=>state.auth.user?.isAdmin);
   return (
    
     <Container>
@@ -57,12 +56,13 @@ const App:React.FC = ()=> {
       <Route path="/" element={<Login/>}/>
       </Routes>
       {admin && 
-    <Fragment>
+    <>
       <Navbar/>
       <Wrapper>
         <Sidebar/>
         <ContentWrapper>
           <Routes>
+            <Route path="*" element={<NotFound />} />
               <Route path="/home" element={<Home/>}/>
               <Route path="/sales" element={<Sales/>}/>
               <Route path="/analytics" element={<Analytics/>}/>
@@ -92,7 +92,7 @@ const App:React.FC = ()=> {
               </Routes>
           </ContentWrapper>
         </Wrapper>
-        </Fragment>
+        </>
         }
       </Router>
     </Container>
