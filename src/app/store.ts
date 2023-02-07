@@ -5,7 +5,8 @@ import logger from 'redux-logger';
 import productsReducer from '../features/products/productsSlice';
 import descriptionItemReducer from '../features/descriptionItems/descriptionItemSlice';
 import sliderItemsReducer from '../features/sliderItems/sliderItemSlice';
-import newsletterOrderReducer from '../features/newsletterOrders/newsletterOrderSlice'
+import newsletterOrderReducer from '../features/newsletterOrders/newsletterOrderSlice';
+import messagesReducer from '../features/messages/messageSlice';
 import {
   persistReducer,
   FLUSH,
@@ -21,6 +22,7 @@ const persistConfig = {
   version: 1,
   storage,
 }
+
 const persistedUserReducer = persistReducer(persistConfig,userReducer) //state we want to persist
 const persistedProductReducer = persistReducer(persistConfig, productsReducer)
 const persistedSliderReducer = persistReducer(persistConfig, sliderItemsReducer)
@@ -33,6 +35,7 @@ export const store = configureStore({
     descriptionItem:descriptionItemReducer,
     sliderItems:persistedSliderReducer,
     newsletterOrders:newsletterOrderReducer,
+    messages:messagesReducer,
   }, middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
     serializableCheck: {
