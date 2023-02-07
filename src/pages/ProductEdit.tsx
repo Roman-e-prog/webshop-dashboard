@@ -1,14 +1,9 @@
-import React, { ChangeEvent} from 'react'
-import styled from 'styled-components'
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { useState, useEffect} from 'react';
-import {useNavigate, useParams} from 'react-router-dom'
-// import { ToastContainer, toast } from 'react-toastify';
-//   import 'react-toastify/dist/ReactToastify.css';
-import { getProduct, deleteProduct, updateProduct, reset} from '../features/products/productsSlice';
+import React, {ChangeEvent, useEffect, useState} from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import {useAppDispatch, useAppSelector} from '../app/hooks';
 import Spinner from '../components/Spinner';
-
-
+import { getProduct, updateProduct, reset } from '../features/products/productsSlice';
 const Container = styled.div`
     width:100%;
 `;
@@ -24,7 +19,6 @@ const FormGroup = styled.div`
     flex-direction:column;
     padding:5px;
     margin-left:15px;
-
     & label{
         margin-bottom:5px;
         color:var(--darkGray);
@@ -73,17 +67,6 @@ const UpdateButton = styled.button`
 -webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 `;
-const DeleteButton = styled.button`
-    background: var(--darkGray);
-    padding:10px;
-    margin:20px 20px;
-    color: var(--white);
-    border:none;
-    cursor: pointer;
-    box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
--webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
--moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
-`;
 const OkButton = styled.button`
     background: white;
     padding:10px;
@@ -98,26 +81,33 @@ const OkButton = styled.button`
 type FileData = {
   image: File | null
 }
-export interface UpdateProductData{
+ export interface UpdateProductData{
   productData:FormData,
-  id:string
+  id:string,
 }
 const ProductEdit = () => {
   const dispatch = useAppDispatch();
-const product:any = useAppSelector((state)=>state.products.product);
-const isError = useAppSelector((state)=>state.products.isError);
-const isLoading = useAppSelector((state)=>state.products.isLoading);
-const message = useAppSelector((state)=>state.products.message);
-  const navigate = useNavigate();
+  const product:any = useAppSelector((state)=>state.products.product);
+  const isError = useAppSelector((state)=>state.products.isError);
+  const isLoading = useAppSelector((state)=>state.products.isLoading);
+  const message = useAppSelector((state)=>state.products.message);
   const {id} = useParams();
+  const navigate = useNavigate();
+  console.log(id);
   useEffect(() => {
+    console.log("Hallo");
     if(isError){
-      window.alert(message)
+      window.alert(message);
     }
     dispatch(getProduct(id!));
-  }, [dispatch,isError, message, id]);
-  
-  const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
+    return ()=>{
+      dispatch(reset());
+    }
+  }, [dispatch, isError, message, id]);
+
+console.log(product);
+console.log(product.image);
+   const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
     title:"",
     producer:"",
     categories:[],
@@ -128,50 +118,49 @@ const message = useAppSelector((state)=>state.products.message);
     sizes:[],
     inStock:"",
   })
-  const {title, producer, categories, desc, price, currency, colors, sizes,inStock} = formdata;
-  
+  const {title, producer, categories, desc, price, currency, colors, sizes, inStock} = formdata;
+  const [filedata, setFiledata] = useState<FileData>({
+    image: null
+  })
+  const [preview, setPreview] = useState<string | null>(null)
+  const handleFileChange = (e:ChangeEvent<HTMLInputElement>)=>{
+    const files = e.currentTarget.files;
+    if(!files){
+      return;
+    }
+    const file = files[0];
+    setFiledata({image:file});
+    handlePreview(files[0]);
+  }
+  const handlePreview = (file:File)=>{
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = ()=>{
+      setPreview(reader.result as string);
+    }
+  }
   useEffect(()=>{
     if(product){
       setFormdata({
-        title:product.title,
-        producer:product.producer,
-        categories:product.categories,
-        desc:product.desc,
-        price:product.price,
-        currency:product.currency,
-        colors:product.colors,
-        sizes:product.sizes,
-        inStock:product.inStock,
+    title:product.title,
+    producer:product.producer,
+    categories:product.categories,
+    desc:product.desc,
+    price:product.price,
+    currency:product.currency,
+    colors:product.colors,
+    sizes:product.sizes,
+    inStock:product.inStock,
       })
     }
   }, [product])
-//img
-const [filedata, setFiledata] = useState<FileData>({
-  image:null
-})
-const [preview, setPreview] = useState<string | null>(null)
-const fileChange = (e:ChangeEvent<HTMLInputElement>)=>{
-  const files = e.currentTarget.files;
-  if(!files){
-    return;
-  }
-  const file = files[0];
-  setFiledata({image:file});
-  updatePreview(files[0]);
-}
-const updatePreview = (file:File)=>{
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = ()=>{
-    setPreview(reader.result as string);
-  }
-}
- 
+
   const onSubmit = (e:React.FormEvent)=>{
     e.preventDefault();
     const productData = new FormData();
     productData.append("title", formdata.title);
-    productData.append("producer", formdata.producer)
+    productData.append("producer", formdata.producer);
+    productData.append("categories", JSON.stringify(formdata.categories));
     productData.append("categories", JSON.stringify(formdata.categories));
     productData.append("desc", formdata.desc);
     productData.append("price", formdata.price);
@@ -179,19 +168,17 @@ const updatePreview = (file:File)=>{
     productData.append("colors", JSON.stringify(formdata.colors));
     productData.append("sizes", JSON.stringify(formdata.sizes));
     productData.append("inStock", formdata.inStock);
-    productData.append("image", filedata.image!)
-   
-    const updateProductData:UpdateProductData = {
-      productData: productData,
+    productData.append("image", filedata.image!);
+
+    const updatedata:UpdateProductData = {
+      productData:productData,
       id:id!,
     }
-    dispatch(updateProduct(updateProductData));
+    dispatch(updateProduct(updatedata));
     return ()=>{
-      dispatch(reset());
+      dispatch(reset())
     }
-  }
-  const handleDelete = ()=>{
-    dispatch(deleteProduct(product._id));
+
   }
   if(isLoading){
     return <Spinner/>
@@ -200,68 +187,65 @@ const updatePreview = (file:File)=>{
     <Container>
         <Form onSubmit={onSubmit}>
           <InputGroup>
-            <FormGroup>
-              <label htmlFor='image'>Bild</label>
-              <input type="file" name="image" id="image" onChange={fileChange}/>
-              {preview ? <img src={preview} alt="Vorschau" title="Vorschau"/> :
+          <FormGroup>
+            <label htmlFor="image">Bild</label>
+            <input src="file" name="image" id="image" onChange={handleFileChange}/>
+            {preview ? <img src={preview} alt="Vorschau" title="Vorschau"/>:
               <img src={product.image} alt={product.title} title={product.title}/>
-              }
-            </FormGroup>
-            <FormGroup>
-              <label htmlFor='title'>Produktname</label>
-              <input type="text" name="title" id="title" defaultValue={title} onChange={(e)=>setFormdata({...formdata, title: e.target.value})}/>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='producer'>Hersteller</label>
-              <input type="text" name="producer" id="producer" defaultValue={producer} onChange={(e)=>setFormdata({...formdata, producer: e.target.value})}/>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='categories'>Kategorie</label>
-              <input type="text" name="categories" id="categories" defaultValue={categories} onChange={(e)=>setFormdata({...formdata, categories: [e.target.value]})}/>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='desc'>Beschreibung</label>
-              <textarea cols={10} rows={10} defaultValue={desc} onChange={(e)=>setFormdata({...formdata, desc: e.target.value})}></textarea>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='price'>Preis</label>
-              <input type="text" name="price" id="price" defaultValue={price} onChange={(e)=>setFormdata({...formdata, price: e.target.value})}/>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='currency'>Währung</label>
-              <input type="text" name="currency" id="currency" defaultValue={currency} onChange={(e)=>setFormdata({...formdata, currency: e.target.value})}/>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='colors'>Colors</label>
-              <input type="text" name="colors" id="colors" defaultValue={colors} onChange={(e)=>setFormdata({...formdata, colors: [e.target.value]})}/>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='sizes'>Sizes</label>
-              <input type="text" name="sizes" id="sizes" defaultValue={sizes} onChange={(e)=>setFormdata({...formdata, sizes: [e.target.value]})}/>
-            </FormGroup>
-            <FormGroup>
-            <label htmlFor='inStock'>Im Bestand</label>
-              <input type="text" name="inStock" id="inStock" defaultValue={String(inStock)} onChange={(e)=>setFormdata({...formdata, inStock: e.target.value})}/>
-            </FormGroup>
-            <FormGroup>
-              <h3 className='datelable'>Erstellt am:</h3>
-              <span>{new Date(product.createdAt).toLocaleDateString("de-De",{day:'numeric', month:'short', year:'numeric' })}</span>
-            </FormGroup>
-            <FormGroup>
-              <h3 className='datelable'>Update am:</h3>
-              <span>{new Date(product.updatedAt).toLocaleDateString("de-De",{day:'numeric', month:'short', year:'numeric' })}</span>
-            </FormGroup>
+            }
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="title">Produktname</label>
+            <input src="text" name="title" id="title" defaultValue={title} onChange={(e)=>setFormdata({...formdata, title:e.target.value})}/>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="producer">Hersteller</label>
+            <input src="text" name="producer" id="producer" defaultValue={producer} onChange={(e)=>setFormdata({...formdata, producer:e.target.value})}/>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="categories">Kategorie</label>
+            <input src="text" name="categories" id="categories" defaultValue={categories} onChange={(e)=>setFormdata({...formdata, categories:[e.target.value]})}/>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="desc">Produktbeschreibung</label>
+            <textarea name="desc" cols={10} rows={10} defaultValue={desc} onChange={(e)=>setFormdata({...formdata, desc:e.target.value})}></textarea>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="price">Preis</label>
+            <input src="text" name="price" id="price" defaultValue={price} onChange={(e)=>setFormdata({...formdata, price:e.target.value})}/>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="currency">Währung</label>
+            <input src="text" name="currency" id="currency" defaultValue={currency} onChange={(e)=>setFormdata({...formdata, currency:e.target.value})}/>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="colors">Farben</label>
+            <input src="text" name="colors" id="colors" defaultValue={colors} onChange={(e)=>setFormdata({...formdata, colors:[e.target.value]})}/>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="sizes">Größen</label>
+            <input src="text" name="sizes" id="sizes" defaultValue={sizes} onChange={(e)=>setFormdata({...formdata, sizes:[e.target.value]})}/>
+          </FormGroup>
+          <FormGroup>
+            <label htmlFor="inStock">Bild</label>
+            <input src="text" name="inStock" id="inStock" defaultValue={String(inStock)} onChange={(e)=>setFormdata({...formdata, inStock:e.target.value})}/>
+          </FormGroup>
+          <FormGroup>
+            <h3 className='datelable'>Erstellt am:</h3>
+            <span>{new Date(product.createdAt).toLocaleDateString("de-De", {day:"numeric", month:"numeric", year:"numeric"})}</span>
+          </FormGroup>
+          <FormGroup>
+            <h3 className='datelabel'>Update am:</h3>
+            <span>{new Date(product.updatedAt).toLocaleDateString("de-De", {day:"numeric", month:"numeric", year:"numeric"})}</span>
+          </FormGroup>
           </InputGroup>
           <ButtonGroup>
-            <UpdateButton onClick={onSubmit}>Update</UpdateButton>
-            
-            <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
+            <UpdateButton>Update</UpdateButton>
           </ButtonGroup>
         </Form>
-        <DeleteButton onClick={handleDelete}>Löschen</DeleteButton>
+        <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
     </Container>
   )
 }
-
 
 export default ProductEdit

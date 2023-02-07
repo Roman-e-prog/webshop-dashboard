@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { useState, useEffect } from 'react';
 import {useNavigate, useParams} from 'react-router-dom'
 import { toast } from 'react-toastify';
-import {getSliderItem, updateSliderItem, deleteSliderItem} from '../features/sliderItems/sliderItemSlice'
+import {getSliderItem, updateSliderItem} from '../features/sliderItems/sliderItemSlice'
 import Spinner from '../components/Spinner';
 
 const Container = styled.div`
@@ -72,17 +72,7 @@ const UpdateButton = styled.button`
 -webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 `;
-const DeleteButton = styled.button`
-    background: var(--darkGray);
-    padding:10px;
-    margin:20px 20px;
-    color: var(--white);
-    border:none;
-    cursor: pointer;
-    box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
--webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
--moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
-`;
+
 const OkButton = styled.button`
     background: white;
     padding:10px;
@@ -200,11 +190,9 @@ const updatePreview = (file:File)=>{
           </InputGroup>
           <ButtonGroup>
             <UpdateButton onClick={onSubmit}>Update</UpdateButton>
-            
-            <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
           </ButtonGroup>
         </Form>
-        <DeleteButton onClick={()=>dispatch(deleteSliderItem(sliderItem._id))}>Löschen</DeleteButton>
+        <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
     </Container>
   )
 }

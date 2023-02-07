@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
 // import Spinner from '../components/Spinner';
-import {getUser, deleteUser, updateUser, reset} from '../features/user/userSlice';
+import {getUser, updateUser, reset} from '../features/user/userSlice';
 const Container = styled.div`
     width:100%;
 `;
@@ -67,17 +67,7 @@ const UpdateButton = styled.button`
 -webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 `;
-const DeleteButton = styled.button`
-    background: var(--darkGray);
-    padding:10px;
-    margin:20px 20px;
-    color: var(--white);
-    border:none;
-    cursor: pointer;
-    box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
--webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
--moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
-`;
+
 const OkButton = styled.button`
     background: white;
     padding:10px;
@@ -217,11 +207,9 @@ const UserDisplay:React.FC = () => {
         </InputGroup>
         <ButtonGroup>
             <UpdateButton onClick={onSubmit}>Update</UpdateButton>
-            
-            <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
         </ButtonGroup>
       </Form>
-      <DeleteButton onClick={()=>dispatch(deleteUser(user._id))}>Löschen</DeleteButton>
+      <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
     </Container>
   )
 }
