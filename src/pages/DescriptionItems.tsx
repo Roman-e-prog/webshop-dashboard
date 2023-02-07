@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
 import {useState, useEffect} from 'react';
-import {createDescriptionItem, getAllDescriptionItem} from '../features/descriptionItems/descriptionItemSlice'
+import {createDescriptionItem, getAllDescriptionItem, deleteDescriptionItem} from '../features/descriptionItems/descriptionItemSlice'
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
@@ -83,8 +83,13 @@ const DescriptionItems = () => {
         toast.error(message);
       }
       dispatch(getAllDescriptionItem())
-    }, [dispatch, isError, message])
-
+    }, [dispatch, isError, message]);
+    //delete
+    const handleDelete = (id:string)=>{
+      dispatch(deleteDescriptionItem(id));
+      dispatch(getAllDescriptionItem);
+    }
+    //create
     const [formdata, setFormdata] = useState({
       title:"",
       text:"",
@@ -114,7 +119,8 @@ const DescriptionItems = () => {
               <tr>
                 <th style={{width:"20%"}}>Titel</th>
                 <th style={{width:"60%"}}>Text</th>
-                <th style={{width:"20%"}}>Daten Anzeige</th>
+                <th style={{width:"10%"}}>Daten Anzeige</th>
+                <th style={{width:"10%"}}>Löschen</th>
               </tr>
           </thead>
           <tbody>
@@ -123,6 +129,7 @@ const DescriptionItems = () => {
                 <td>{item.title}</td>
                 <td>{item.text}</td>
                 <td id="btn"><button><Link to={`/showDescriptionItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Bearbeiten</Link></button></td>
+                <td id="btn"><button onClick={()=>handleDelete(item._id!)}>Löschen</button></td>
               </tr>
             ))} 
           </tbody>

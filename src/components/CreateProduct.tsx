@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useState } from 'react'
-import { toast } from 'react-toastify';
+import React, { ChangeEvent, useState} from 'react'
+import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components'
-import { useAppDispatch} from '../app/hooks';
-import {createProduct} from '../features/products/productsSlice'
+import { useAppDispatch, useAppSelector} from '../app/hooks';
+import {createProduct, getAllProducts} from '../features/products/productsSlice'
 const Container = styled.div`
     width:90%;
     margin: 10px auto;
@@ -54,8 +54,9 @@ const Button = styled.button`
 type FileData = {
   image: File | null
 }
-const CreateProduct = () => {
+const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
   const dispatch = useAppDispatch();
+  const allProducts = useAppSelector((state)=>state.products.allProducts)
   const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
     title:"",
     producer:"",
@@ -108,8 +109,11 @@ const CreateProduct = () => {
     productData.append("image", filedata.image!)
 
     dispatch(createProduct(productData));
+    dispatch(getAllProducts())
+    props.setProducts(allProducts);
     toast.info("Produckt wurde erfolgreich angelegt");
   }
+
    
   return (
     <Container>
@@ -162,6 +166,7 @@ const CreateProduct = () => {
           <Button>Absenden</Button>
         </ButtonWrapper>
       </Form>
+      <ToastContainer/>
     </Container>
   )
 }

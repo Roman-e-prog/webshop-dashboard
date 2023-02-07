@@ -2,9 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import {useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { getAllProducts} from '../features/products/productsSlice';
+import { getAllProducts, deleteProduct} from '../features/products/productsSlice';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import Pagination from '../components/Pagination';
@@ -57,14 +55,14 @@ const SortButton = styled.button`
   border:none;
 `;
 const Products = () => {
-  const dispatch = useAppDispatch();
+const dispatch = useAppDispatch();
 const allProducts = useAppSelector((state)=>state.products.allProducts);
 const isError = useAppSelector((state)=>state.products.isError);
 const isLoading = useAppSelector((state)=>state.products.isLoading);
 const message = useAppSelector((state)=>state.products.message);
   useEffect(() => {
     if(isError){
-      toast.error(message)
+      window.alert(message)
     }
     dispatch(getAllProducts())
   }, [dispatch, isError, message])
@@ -75,6 +73,12 @@ const message = useAppSelector((state)=>state.products.message);
       setProducts(allProducts)
     }
   }, [allProducts]);
+
+  const handleDelete = (id:string)=>{
+    dispatch(deleteProduct(id));
+    dispatch(getAllProducts);
+    setProducts(allProducts);
+  }
   
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -139,6 +143,7 @@ const message = useAppSelector((state)=>state.products.message);
             <th>Im Bestand</th>
             <th>Preis</th>
             <th>ProduktDetails</th>
+            <th>Löschen</th>
           </tr>
         </thead>
         <tbody>
@@ -153,7 +158,9 @@ const message = useAppSelector((state)=>state.products.message);
               <td>{item._id}</td>
               <td>{item.inStock}</td>
               <td>{`${item.price} ${item.currency}`}</td>
-              <td id="btn"><button><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}>Anzeigen</Link></button></td>
+              <td id="btn"><button><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}
+              >Anzeigen</Link></button></td>
+              <td id="btn"><button onClick={()=>handleDelete(item._id)}>Löschen</button></td>
             </tr>
           ))
           : currentProducts.map((item:any)=>(
@@ -167,6 +174,7 @@ const message = useAppSelector((state)=>state.products.message);
               <td>{item.inStock}</td>
               <td>{`${item.price} ${item.currency}`}</td>
               <td><button><Link to={`/showProduct/${item._id}`}>Anzeigen</Link></button></td>
+              <td id="btn"><button onClick={()=>handleDelete(item._id)}>Löschen</button></td>
             </tr>
           ))
         }
@@ -178,8 +186,7 @@ const message = useAppSelector((state)=>state.products.message);
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
       />
-      <CreateProduct/>
-      <ToastContainer />
+      <CreateProduct setProducts={setProducts}/>
     </Container>
   )
 }
