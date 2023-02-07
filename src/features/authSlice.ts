@@ -3,6 +3,7 @@ import authService from './authService';
 //User from localstorage
 const user = JSON.parse(localStorage.getItem('user') || 'false');
 interface User {
+  _id?:string
   vorname:string
   nachname:string
   username:string

@@ -2,6 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import productsService from './productsService'
 import {UpdateProductData} from '../../pages/ProductEdit'
+
 export interface Product{
     _id?:string,
     id?:string,
@@ -17,7 +18,6 @@ export interface Product{
     inStock:boolean,
     createdAt:Date,
     updatedAt?:Date,
-    accessToken?:string,
 }
 export interface InitialState{
     product:Product[],
@@ -137,7 +137,6 @@ export const productsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.product = action.payload;
-        console.log(action.payload);
       })
       .addCase(updateProduct.rejected, (state, action:any)=>{
         state.isLoading = false;
@@ -187,6 +186,6 @@ export const productsSlice = createSlice({
       })
     }
 })
-
+export const productValue = (state: RootState)=>state.products.product;
 export const {reset} = productsSlice.actions;
 export default productsSlice.reducer;
