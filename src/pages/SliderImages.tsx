@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
-import { createSliderItem, getAllSliderItems } from '../features/sliderItems/sliderItemSlice';
+import { createSliderItem, getAllSliderItems, deleteSliderItem } from '../features/sliderItems/sliderItemSlice';
 import { useEffect, useState } from 'react';
 import Spinner from '../components/Spinner';
 import { Link } from 'react-router-dom';
@@ -146,6 +146,7 @@ const onSubmit =(e:React.FormEvent<HTMLFormElement>)=>{
             <th>Vorgelesener Text</th>
             <th>Titel</th>
             <th>Details</th>
+            <th>Löschen</th>
           </tr>  
         </thead>
         <tbody>
@@ -155,6 +156,7 @@ const onSubmit =(e:React.FormEvent<HTMLFormElement>)=>{
               <td>{item.alt}</td>
               <td>{item.title}</td>
               <td id="btn"><button><Link to={`/showSliderItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Bearbeiten</Link></button></td>
+              <td id="btn"><button onClick={()=>dispatch(deleteSliderItem(item._id))}>Löschen</button></td>
             </tr>
           ))}
         </tbody>

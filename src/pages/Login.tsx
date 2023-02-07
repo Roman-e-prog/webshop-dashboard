@@ -47,7 +47,7 @@ const SubmitButton = styled.button`
 const Login = () => {
         const dispatch = useAppDispatch();
         const selector = useSelector((state:RootState)=>state.auth);
-        const {user, isError, isLoading, isSuccess, message} = selector;
+        const {user, isError, message} = selector;
         const navigate = useNavigate();
     const [formdata, setFormdata] = useState({
         username:"",
@@ -66,7 +66,7 @@ useEffect(()=>{
     return ()=>{
         dispatch(reset());
     }
-}, [dispatch, isError, message, isSuccess, navigate, user]);
+}, [dispatch, isError, message, navigate, user]);
 
 const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
     setFormdata((prevState)=>({

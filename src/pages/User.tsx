@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
 import Spinner from '../components/Spinner';
-import {getAllUser} from '../features/user/userSlice';
+import {getAllUser, deleteUser} from '../features/user/userSlice';
 import Search from '../components/Search';
 import Pagination from '../components/Pagination';
 const Container = styled.div`
@@ -63,21 +62,17 @@ const User = () => {
     
     useEffect(()=>{
         if(isError){
-            toast.error(message);
+            window.alert(message);
         }
         dispatch(getAllUser())
     }, [dispatch, isError, message])
-    const [user,setUser] = useState(allUser);;
+    const [user,setUser] = useState(allUser);
     //pagination
     const [currentPage, setCurrentPage] = useState(1);
-    console.log(currentPage);
     const [userPerPage] = useState(5);
     const lastIndex = currentPage * userPerPage;
-    console.log(lastIndex);
     const firstIndex = lastIndex - userPerPage;
-    console.log(firstIndex);
     const currentUser = user.slice(firstIndex, lastIndex);
-    console.log(currentUser);
   
     //search
     const [searchValue, setSearchValue] = useState('');
@@ -113,8 +108,12 @@ const User = () => {
                 return 1;
             }
         }));
-    } ;
-    
+    };
+
+   const handleDelete = (id:string)=>{
+    dispatch(deleteUser(id));
+    dispatch(getAllUser());
+   } 
     if(isLoading){
         return <Spinner/>
     }
@@ -135,26 +134,30 @@ const User = () => {
                     <th>Kundennummer</th>
                     <th>Stadt</th>
                     <th>Kundendaten</th>
+                    <th>Löschen</th>
                 </tr>
             </thead>
             <tbody>
                     {filteredUser ? filteredUser.map((item)=>(
+                       <tr key={item._id}>
+                        <td>{item.nachname}</td>
+                        <td>{item.email}</td>
+                        <td>{item._id}</td>
+                        <td>{item.city}</td>
+                        <td id="btn"><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Anzeigen</Link></button></td>
+                        <td id="btn"><button onClick={()=>handleDelete(item._id!)}>Löschen</button></td>
+                       </tr> 
+                    ))
+                    : currentUser.map((item)=>(
                         <tr key={item._id}>
-                            <td>{item.nachname}</td>
-                            <td>{item.email}</td>
-                            <td>{item._id}</td>
-                            <td>{item.city}</td>
-                            <td id="btn"><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Benutzer anzeigen</Link></button></td>
-                            </tr>))
-                            : currentUser.map((item)=>(
-                                <tr key={item._id}>
-                                    <td>{item.nachname}</td>
-                                    <td>{item.email}</td>
-                                    <td>{item._id}</td>
-                                    <td>{item.city}</td>
-                                    <td id="btn"><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Benutzer anzeigen</Link></button></td>
-                                </tr>
-                    ))}
+                         <td>{item.nachname}</td>
+                         <td>{item.email}</td>
+                         <td>{item._id}</td>
+                         <td>{item.city}</td>
+                         <td id="btn"><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Anzeigen</Link></button></td>
+                         <td id="btn"><button onClick={()=>handleDelete(item._id!)}>Löschen</button></td>
+                        </tr>
+                        ))}
             </tbody>
         </Table>
         <Pagination total={user.length} 
