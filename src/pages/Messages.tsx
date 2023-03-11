@@ -6,6 +6,7 @@ import { createMessage, deleteMessage, getAllMessages, reset } from '../features
 import {CiEdit} from 'react-icons/ci';
 import {MdDeleteForever} from 'react-icons/md'
 import MessagesEdit from '../components/MessagesEdit';
+
 const Container = styled.div`
   width:100%;
   display:flex;
@@ -154,14 +155,17 @@ const Messages = () => {
   const [formdata, setFormdata] = useState({
     userMessage:"",
   })
+  const [formerror, setFormerror] = useState("");
   const {userMessage} = formdata;
+ 
+  //change and send logic
   const handleChange = (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
     setFormdata((prevState)=>({
       ...prevState,
       [e.target.name]: e.target.value
     }))
   }
- const onSubmit = (e:React.FormEvent)=>{
+ const onSubmit = async (e:React.FormEvent)=>{
   e.preventDefault();
   const userMessageData = {
     userMessage,
@@ -169,10 +173,18 @@ const Messages = () => {
     sendUsername: user!.username,
     sendUserId,
   }
-  dispatch(createMessage(userMessageData));
-  dispatch(reset());
-  dispatch(getAllMessages());
+  if(userMessageData.userMessage === ""){
+    setFormerror("Sie dürfen keine leere Nachricht versenden");
+    return;
+  }
+  else{
+    setFormerror("");
+    dispatch(createMessage(userMessageData));
+    dispatch(reset());
+    dispatch(getAllMessages());
+  }  
  }
+//delete
  const handleDelete = (id:string)=>{
   dispatch(deleteMessage(id))
   dispatch(getAllMessages());
@@ -198,7 +210,8 @@ const Messages = () => {
         <ul>
           {allUser.map((item)=>(
             <React.Fragment key={item._id}>
-            {item.isAdmin && <li onClick={()=>setUsername(item.username)}><span onClick={()=>setUserId(item._id!)}>{item.vorname} {item.nachname}</span></li>}
+            {item.isAdmin && <li onClick={()=>setUsername(item.username)}><span onClick={()=>setUserId(item._id!)}>{item.vorname} {item.nachname}</span>
+            </li>}
             </React.Fragment>
           ))}
         </ul>
@@ -244,6 +257,9 @@ const Messages = () => {
 
         <MessageForm onSubmit={onSubmit}>
            <textarea cols={10} rows={10} name="userMessage" value={userMessage} onChange={(e)=>handleChange(e)}></textarea>
+           <div>
+           {formerror ? <span style={{color:"red"}}>{formerror}</span>: null}
+           </div>
            <button>Absenden</button>
         </MessageForm> 
       </WriteMessage>
