@@ -1,5 +1,8 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import styled from 'styled-components'
+import { useAppDispatch, useAppSelector} from '../app/hooks';
+import { Cartdata, getAllCartdata } from '../features/cartdata/cartSlice';
+import Spinner from './Spinner';
 const Container = styled.div`
     flex:2;
     display:flex;
@@ -31,25 +34,43 @@ const DataTable = styled.table`
     }
 `;
 const Transactions = () => {
+  const dispatch = useAppDispatch();
+  const allCartdata = useAppSelector((state)=>state.cartdata.allCartdata);
+ 
+
+useEffect(()=>{
+  dispatch(getAllCartdata())
+},[dispatch])
+
+const sorteddata = [...allCartdata].sort((a,b)=>a.createdAt > b.createdAt ? -1 : 1)
+
   return (
     <Container>
       <Title>Neueste Transaktionen</Title>
       <ContentWrapper>
         <DataTable>
-          <tbody>
+          <thead>
               <tr>
                   <th>KUNDE</th>
                   <th>DATUM</th>
                   <th>UMSATZ</th>
-                  <th>Status</th>
               </tr>
-              <tr>
-              <td>Placeholder</td>
-              <td>28.10.22</td>
-              <td>€ 122</td>
-              <td><button>Status anzeigen</button></td>
-              </tr>
-            </tbody>
+              </thead>
+              <tbody>
+                {
+                  sorteddata.map((item:any)=>(
+                    <tr key={item._id}>
+                      <td>{item.user.nachname}</td>
+                      <td>{new Date(item.createdAt).toLocaleDateString("de-De",{
+                        day:'numeric',
+                        month:'long'
+                      })}</td>
+                      <td>{item.netto} €</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            
         </DataTable>
       </ContentWrapper>
     </Container>
