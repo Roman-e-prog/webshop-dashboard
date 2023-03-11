@@ -17,11 +17,13 @@ export interface User{
   isAdmin:boolean
   createdAt: Date
   updatedAt?: Date
-  accessToken?: string;
+  accessToken?: string
+  total?:number
 }
 export interface InitialState{
     user:User[],
     allUser:User[],
+    userStats:User[],
     isLoading:boolean,
     isSuccess:boolean,
     isError:boolean,
@@ -30,6 +32,7 @@ export interface InitialState{
 const initialState:InitialState ={
     user:[],
     allUser:[],
+    userStats:[],
     isLoading:false,
     isSuccess:false,
     isError:false,
@@ -176,7 +179,7 @@ export const userSlice = createSlice({
       .addCase(getUserStats.fulfilled, (state, action)=>{
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.userStats = action.payload;
       })
       .addCase(getUserStats.rejected, (state, action:any)=>{
         state.isLoading = false;
