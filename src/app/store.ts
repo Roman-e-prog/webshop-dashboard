@@ -7,6 +7,8 @@ import descriptionItemReducer from '../features/descriptionItems/descriptionItem
 import sliderItemsReducer from '../features/sliderItems/sliderItemSlice';
 import newsletterOrderReducer from '../features/newsletterOrders/newsletterOrderSlice';
 import messagesReducer from '../features/messages/messageSlice';
+import cartdataReducer from '../features/cartdata/cartSlice';
+import orderdataReducer from '../features/orderdata/orderdataSlice'
 import {
   persistReducer,
   FLUSH,
@@ -23,9 +25,11 @@ const persistConfig = {
   storage,
 }
 
+
 const persistedUserReducer = persistReducer(persistConfig,userReducer) //state we want to persist
 const persistedProductReducer = persistReducer(persistConfig, productsReducer)
 const persistedSliderReducer = persistReducer(persistConfig, sliderItemsReducer)
+const persistedCartdataReducer = persistReducer(persistConfig, cartdataReducer )
 
 export const store = configureStore({
   reducer: {
@@ -36,6 +40,8 @@ export const store = configureStore({
     sliderItems:persistedSliderReducer,
     newsletterOrders:newsletterOrderReducer,
     messages:messagesReducer,
+    cartdata:persistedCartdataReducer,
+    orderdata:orderdataReducer,
   }, middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
     serializableCheck: {
