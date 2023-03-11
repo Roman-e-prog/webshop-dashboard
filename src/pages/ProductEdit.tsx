@@ -93,9 +93,8 @@ const ProductEdit = () => {
   const message = useAppSelector((state)=>state.products.message);
   const {id} = useParams();
   const navigate = useNavigate();
-  console.log(id);
+
   useEffect(() => {
-    console.log("Hallo");
     if(isError){
       window.alert(message);
     }
@@ -169,7 +168,9 @@ console.log(product.image);
     productData.append("sizes", JSON.stringify(formdata.sizes));
     productData.append("inStock", formdata.inStock);
     productData.append("image", filedata.image!);
-
+    for(let value of productData){
+      console.log(value);
+    }
     const updatedata:UpdateProductData = {
       productData:productData,
       id:id!,
@@ -227,7 +228,7 @@ console.log(product.image);
             <input src="text" name="sizes" id="sizes" defaultValue={sizes} onChange={(e)=>setFormdata({...formdata, sizes:[e.target.value]})}/>
           </FormGroup>
           <FormGroup>
-            <label htmlFor="inStock">Bild</label>
+            <label htmlFor="inStock">Im Bestand</label>
             <input src="text" name="inStock" id="inStock" defaultValue={String(inStock)} onChange={(e)=>setFormdata({...formdata, inStock:e.target.value})}/>
           </FormGroup>
           <FormGroup>
