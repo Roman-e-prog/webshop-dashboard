@@ -7,6 +7,9 @@ import { RootState } from '../app/store';
 import {AiOutlineLogout} from 'react-icons/ai'
 import { logout, reset } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
+import {persistStore} from 'redux-persist'
+import { store } from '../app/store';
+const persistor = persistStore(store);
 const Container = styled.nav`
     width:100%;
     height:80px;
@@ -57,6 +60,7 @@ const Navbar:React.FC = () => {
   const onLogout = ()=>{
     dispatch(logout());
     dispatch(reset());
+    persistor.purge();
     navigate('/');
   }
   return (
