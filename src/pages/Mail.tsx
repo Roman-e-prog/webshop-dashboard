@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import styled from 'styled-components';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import CreateNewsletter from '../components/CreateNewsletter';
 import Pagination from '../components/Pagination';
 import Spinner from '../components/Spinner';
 import { getAllNewsletterOrders } from '../features/newsletterOrders/newsletterOrderSlice';
+import emailjs from '@emailjs/browser';
 const Container = styled.div`
   width:100%;
 `;
@@ -31,6 +32,7 @@ const Table = styled.table`
     padding:2px;
   }
 `;
+
 const Mail = () => {
   const dispatch = useAppDispatch();
   const newsletterOrders = useAppSelector((state)=>state.newsletterOrders.newsletterOrders);
@@ -48,6 +50,19 @@ const Mail = () => {
   const lastIndex = currentPage * newsletterPerPage;
   const firstIndex = lastIndex - newsletterPerPage;
   const currentNewsletterOrders = newsletterOrders.slice(firstIndex, lastIndex);
+  //mail
+const form = useRef<HTMLFormElement | null>(null);
+  const sendEmail = (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    emailjs.sendForm('service_5ek36y4', 'template_ei0n425', form.current!, 'Pp0kS4Y3yjdLZZIBs')
+      .then((result:any) => {
+          console.log(result.text);
+          console.log("message sended")
+          e.currentTarget.reset()
+      }, (error:any) => {
+          console.log(error.text);
+      });
+    }
   if(isLoading){
     return <Spinner/>
   }
@@ -81,7 +96,11 @@ const Mail = () => {
           setCurrentPage={setCurrentPage}
         />
       </NewsletterOrder>
-      <CreateNewsletter/>
+      <CreateNewsletter
+        sendEmail={sendEmail}
+        newsletterOrders={newsletterOrders}
+        form={form}
+      />
     </Container>
   )
 }
