@@ -90,13 +90,10 @@ const UserDisplay:React.FC = () => {
     const dispatch = useAppDispatch();
     const selector = useAppSelector((state:RootState)=>state.user);
     const navigate = useNavigate();
-    // const {user, isError, isLoading, message}:any = selector;
+    
     const {user}:any= selector;
     const {id} = useParams();
     useEffect(()=>{
-        // if(isError){
-        //     toast.error(message);
-        // }
         dispatch(getUser(id!));
        
     }, [dispatch, id]);
