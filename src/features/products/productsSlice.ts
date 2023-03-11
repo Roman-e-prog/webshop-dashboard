@@ -2,7 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import productsService from './productsService'
 import {UpdateProductData} from '../../pages/ProductEdit'
-
+import { PURGE } from 'redux-persist'
 export interface Product{
     _id?:string,
     id?:string,
@@ -20,7 +20,7 @@ export interface Product{
     updatedAt?:Date,
 }
 export interface InitialState{
-    product:Product[],
+    product: Product,
     allProducts:Product[],
     isLoading:boolean,
     isSuccess:boolean,
@@ -28,7 +28,7 @@ export interface InitialState{
     message:string,
 }
 const initialState: InitialState ={
-    product:[],
+    product:{} as Product,
     allProducts:[],
     isLoading:false,
     isSuccess:false,
@@ -52,7 +52,7 @@ export const createProduct = createAsyncThunk<Product, FormData, AsyncThunkConfi
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const updateProduct = createAsyncThunk<Product[], UpdateProductData, AsyncThunkConfig>('/product/update', async (updateProductData, thunkAPI)=>{
+export const updateProduct = createAsyncThunk<Product, UpdateProductData, AsyncThunkConfig>('/product/update', async (updateProductData, thunkAPI)=>{
     try{
         const token:string = thunkAPI.getState().auth.user!.accessToken;
         return await productsService.updateProduct(updateProductData, token);
@@ -81,7 +81,7 @@ export const deleteProduct = createAsyncThunk<Product, string, AsyncThunkConfig>
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const getProduct = createAsyncThunk<Product[], string, AsyncThunkConfig>('product/find', async (Id, thunkAPI)=>{
+export const getProduct = createAsyncThunk<Product, string, AsyncThunkConfig>('product/find', async (Id, thunkAPI)=>{
     try{
         return await productsService.getProduct(Id);
     } catch(error:any){
@@ -116,14 +116,14 @@ export const productsSlice = createSlice({
     },
     extraReducers(builder) {
       builder
+      .addCase(PURGE, ()=>initialState)
       .addCase(createProduct.pending, (state)=>{
         state.isLoading = true; 
       })
       .addCase(createProduct.fulfilled, (state, action)=>{
         state.isLoading = false;
         state.isSuccess = true;
-        state.product.push(action.payload);
-        console.log(action.payload)
+        state.allProducts.push(action.payload);
       })
       .addCase(createProduct.rejected, (state,action:any)=>{
         state.isLoading = false;
@@ -149,7 +149,7 @@ export const productsSlice = createSlice({
       .addCase(deleteProduct.fulfilled, (state, action)=>{
         state.isLoading = false;
         state.isSuccess = true;
-        state.product = state.product.filter((item)=>item._id !== action.payload.id);
+        state.allProducts = state.allProducts.filter((item)=>item._id !== action.payload.id);
       })
       .addCase(deleteProduct.rejected, (state, action:any)=>{
         state.isLoading = false;
