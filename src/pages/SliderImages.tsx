@@ -1,12 +1,13 @@
 import React, { ChangeEvent } from 'react'
-import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { RootState } from '../app/store';
 import { createSliderItem, getAllSliderItems, deleteSliderItem } from '../features/sliderItems/sliderItemSlice';
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import Spinner from '../components/Spinner';
 import { Link } from 'react-router-dom';
+
 const Container = styled.div`
 width:100%;
 `;
@@ -79,8 +80,10 @@ type FileData = {
 };
 const SliderImages = () => {
   const dispatch = useAppDispatch();
-  const selector = useAppSelector((state:RootState)=>state.sliderItems);
-  const {allSliderItems, isError, isLoading, message} = selector;
+  const allSliderItems = useAppSelector((state)=>state.sliderItems.allSliderItems);
+  const isError = useAppSelector((state)=>state.sliderItems.isError);
+  const message = useAppSelector((state)=>state.sliderItems.message);
+  const isLoading = useAppSelector((state)=>state.sliderItems.isLoading);
 
   useEffect(()=>{
     if(isError){
@@ -88,12 +91,15 @@ const SliderImages = () => {
     }
     dispatch(getAllSliderItems())
   }, [dispatch, isError, message]);
+
   const [sliderItems, setSliderItems] = useState<any[]>([]);
+
   useEffect(()=>{
     if(allSliderItems){
       setSliderItems(allSliderItems)
     }
   }, [allSliderItems])
+
   const [formdata, setFormdata] = useState({
     alt:"",
     title:"",
@@ -124,21 +130,29 @@ const SliderImages = () => {
       [e.target.name]: e.target.value
     }))
   }
-const onSubmit =(e:React.FormEvent<HTMLFormElement>)=>{
+  const handleDelete = (id:string)=>{
+    dispatch(deleteSliderItem(id));
+    window.alert("Bild wurde gelöscht");
+    return setSliderItems(allSliderItems);   
+  }
+
+const onSubmit = (e:React.FormEvent)=>{
   e.preventDefault();
   const sliderItemData = new FormData();
   sliderItemData.append("alt", formdata.alt);
   sliderItemData.append("title", formdata.title);
   sliderItemData.append("img", filedata.img!);
 
-  dispatch(createSliderItem(sliderItemData));
+    dispatch(createSliderItem(sliderItemData));
+    setSliderItems(allSliderItems);
 }
-
+  
   if(isLoading){
     return <Spinner/>
   }
   return (
     <Container>
+      <ToastContainer/>
       <Table>
         <thead>
           <tr>
@@ -150,13 +164,13 @@ const onSubmit =(e:React.FormEvent<HTMLFormElement>)=>{
           </tr>  
         </thead>
         <tbody>
-          {sliderItems.map((item)=>(
+          {sliderItems && sliderItems.map((item)=>(
             <tr key={item._id}>
               <td><img src={item.img} alt={item.alt} title={item.title} style={{width:"200px", height:"100px"}}/></td>
               <td>{item.alt}</td>
               <td>{item.title}</td>
               <td id="btn"><button><Link to={`/showSliderItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Bearbeiten</Link></button></td>
-              <td id="btn"><button onClick={()=>dispatch(deleteSliderItem(item._id))}>Löschen</button></td>
+              <td id="btn"><button onClick={()=>handleDelete(item._id)}>Löschen</button></td>
             </tr>
           ))}
         </tbody>
@@ -176,7 +190,7 @@ const onSubmit =(e:React.FormEvent<HTMLFormElement>)=>{
           <input type="text" name="title" id="title" required value={title} onChange={(e)=>handleChange(e)}/>
         </FormGroup>
         <ButtonWrapper>
-          <Button>Absenden</Button>
+          <Button onClick={onSubmit}>Absenden</Button>
         </ButtonWrapper>
       </Form>
     </Container>

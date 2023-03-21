@@ -5,7 +5,8 @@ import { RootState } from '../app/store';
 import { login, reset} from '../features/authSlice';
 import { useAppDispatch } from '../app/hooks';
 import { useSelector } from 'react-redux';
-import {toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import {toast, ToastContainer} from 'react-toastify'
 import { useNavigate } from 'react-router-dom';
 import { LoginSchema } from '../validations/LoginValidation';
 import update from 'immutability-helper';
@@ -122,6 +123,7 @@ const onSubmit = useCallback(
 
   return (
     <Container>
+      <ToastContainer/>
       <LoginForm onSubmit={onSubmit}>
         <FormGroup>
             <label htmlFor='username'>Benutzername</label>

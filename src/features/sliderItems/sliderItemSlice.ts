@@ -2,7 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
 import { UpdateSliderItemsData } from '../../pages/SliderItemsEdit'
 import sliderItemService from './sliderItemService'
-export interface SliderItems{
+export interface SliderItem{
     _id?:string,
     id?:string,
     img:string,
@@ -12,15 +12,15 @@ export interface SliderItems{
     updatedAt:string,
 }
 export interface InitialState{
-    sliderItem: SliderItems[],
-    allSliderItems:SliderItems[],
+    sliderItem: SliderItem,
+    allSliderItems:SliderItem[],
     isLoading:boolean,
     isSuccess:boolean,
     isError:boolean,
     message:string,
 }
 const initialState:InitialState ={
-    sliderItem:[],
+    sliderItem:{} as SliderItem,
     allSliderItems:[],
     isLoading:false,
     isSuccess:false,
@@ -30,7 +30,7 @@ const initialState:InitialState ={
 type AsyncThunkConfig ={
     state:RootState,
 }
-export const createSliderItem = createAsyncThunk<SliderItems, FormData, AsyncThunkConfig>('/sliderItems/create', async (sliderItemData, thunkAPI)=>{
+export const createSliderItem = createAsyncThunk<SliderItem, FormData, AsyncThunkConfig>('/sliderItems/create', async (sliderItemData, thunkAPI)=>{
     try{
         const token:string = thunkAPI.getState().auth.user!.accessToken;
         return sliderItemService.createSliderItem(sliderItemData, token);
@@ -44,7 +44,7 @@ export const createSliderItem = createAsyncThunk<SliderItems, FormData, AsyncThu
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const updateSliderItem = createAsyncThunk<SliderItems[], UpdateSliderItemsData, AsyncThunkConfig>('/sliderItems/update', async (updateSliderData, thunkAPI)=>{
+export const updateSliderItem = createAsyncThunk<SliderItem, UpdateSliderItemsData, AsyncThunkConfig>('/sliderItems/update', async (updateSliderData, thunkAPI)=>{
     try{
         const token = thunkAPI.getState().auth.user!.accessToken;
         return sliderItemService.updateSliderItem(updateSliderData, token);
@@ -58,7 +58,7 @@ export const updateSliderItem = createAsyncThunk<SliderItems[], UpdateSliderItem
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const deleteSliderItem = createAsyncThunk<SliderItems, string, AsyncThunkConfig>('/sliderItems/delete', async (Id, thunkAPI)=>{
+export const deleteSliderItem = createAsyncThunk<SliderItem, string, AsyncThunkConfig>('/sliderItems/delete', async (Id, thunkAPI)=>{
     try{
         const token = thunkAPI.getState().auth.user!.accessToken;
         return sliderItemService.deleteSliderItem(Id, token);
@@ -72,7 +72,7 @@ export const deleteSliderItem = createAsyncThunk<SliderItems, string, AsyncThunk
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const getSliderItem = createAsyncThunk<SliderItems[], string, AsyncThunkConfig>('/sliderItems/find', async (Id, thunkAPI)=>{
+export const getSliderItem = createAsyncThunk<SliderItem, string, AsyncThunkConfig>('/sliderItems/find', async (Id, thunkAPI)=>{
     try{;
         return sliderItemService.getSliderItem(Id);
     }catch (error:any) {
@@ -85,7 +85,7 @@ export const getSliderItem = createAsyncThunk<SliderItems[], string, AsyncThunkC
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const getAllSliderItems = createAsyncThunk<SliderItems[], void, AsyncThunkConfig>('/sliderItems/findAll', async (_, thunkAPI)=>{
+export const getAllSliderItems = createAsyncThunk<SliderItem[], void, AsyncThunkConfig>('/sliderItems/findAll', async (_, thunkAPI)=>{
     try{
         return sliderItemService.getAllSliderItems();
     }catch (error:any) {
@@ -112,7 +112,7 @@ export const sliderItemsSlice = createSlice({
         .addCase(createSliderItem.fulfilled, (state, action)=>{
             state.isLoading = false;
             state.isSuccess = true;
-            state.sliderItem.push(action.payload);
+            state.allSliderItems.push(action.payload);
         })
         .addCase(createSliderItem.rejected, (state, action:any)=>{
             state.isLoading = false;
@@ -138,12 +138,12 @@ export const sliderItemsSlice = createSlice({
         .addCase(deleteSliderItem.fulfilled, (state, action)=>{
             state.isLoading = false;
             state.isSuccess = true;
-            state.sliderItem = state.sliderItem.filter((item)=>item._id !== action.payload.id);
+            state.allSliderItems = state.allSliderItems.filter((item)=>item._id !== action.payload.id);
         })
-        .addCase(deleteSliderItem.rejected, (state, action:any)=>{
+        .addCase(deleteSliderItem.rejected, (state, action)=>{
             state.isLoading = false;
             state.isError = true;
-            state.message = action.payload;
+            state.message = action.payload as string;
         })
         .addCase(getSliderItem.pending, (state)=>{
             state.isLoading = true;

@@ -1,11 +1,9 @@
-import React, { ChangeEvent, useState, useCallback} from 'react'
-import { toast, ToastContainer } from 'react-toastify';
+import React, { ChangeEvent, useState, useEffect, useCallback} from 'react'
 import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector} from '../app/hooks';
-import {createProduct, getAllProducts} from '../features/products/productsSlice';
-import  {createProductSchema}  from '../validations/createProductValidation';
-import update from 'immutability-helper';
+import {createProduct} from '../features/products/productsSlice';
 const Container = styled.div`
     width:90%;
     margin: 10px auto;
@@ -110,188 +108,97 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
       sizes:"",
       inStock:"",
   })
-console.log(formerror);
-  // const onSubmit = useCallback(
-  //   async (e:React.FormEvent) => {
-  //     e.preventDefault()
-  //     const completeData = {
-  //       title,
-  //       producer,
-  //       categories,
-  //       desc,
-  //       price,
-  //       currency,
-  //       colors,
-  //       sizes,
-  //       inStock,
-  //     }
-  //     const isFormValid = await createProductSchema.isValid(completeData, {
-  //       abortEarly: false, // Prevent aborting validation after first error
-  //     })
-   
-  //     if (isFormValid) {
-  //       const productData = new FormData();
-  //       productData.append("title", formdata.title)
-  //       productData.append("producer", formdata.producer);
-  //       productData.append("categories", JSON.stringify(formdata.categories))
-  //       productData.append("desc", formdata.desc);
-  //       productData.append("price", formdata.price);
-  //       productData.append("currency", formdata.currency);
-  //       productData.append("colors", JSON.stringify(formdata.colors))
-  //       productData.append("sizes", JSON.stringify(formdata.sizes))
-  //       productData.append("inStock", formdata.inStock);
-  //       productData.append("image", filedata.image!)
-  //       // Check the schema if form is valid:
-  //       for(let value of productData){
-  //         console.log(value);
-  //       }
-  //       dispatch(createProduct(productData));
-  //       dispatch(getAllProducts())
-  //       props.setProducts(allProducts);
-  //       toast.info("Produckt wurde erfolgreich angelegt");
-  //     } else {
-  //       // If form is not valid, check which fields are incorrect:
-  //       createProductSchema.validate(completeData, { abortEarly: false }).catch((err) => {
-  //         const errors = err.inner.reduce((acc:any, error:any) => {
-  //           return {
-  //             ...acc,
-  //             [error.path]: error.errors,
-  //           }
-  //         }, {})
-  //           console.log(errors);
-  //         // Update form errors state:
-  //         setFormerror((prevErrors:any) =>
-  //           update(prevErrors, {
-  //             $set: errors,
-  //           })
-  //         )
-  //       })
-  //     }
-  //   },
-  //   [dispatch, allProducts, props,  title,
-  //     producer,
-  //     categories,
-  //     desc,
-  //     price,
-  //     currency,
-  //     colors,
-  //     sizes,
-  //     inStock, filedata.image, formdata.categories, formdata.colors, formdata.currency, formdata.desc, formdata.inStock, formdata.price, formdata.producer, formdata.sizes, formdata.title]
-  // )
 
-  const onSubmit = (e:React.FormEvent)=>{
-    e.preventDefault();
-    const CategoriePattern = /([A-Za-z]+( [A-Za-z]+)+)/i;
-    const ColorsPattern = /([a-z]+( [a-z]+)+)/i;
-    const SizesPattern = /\s[0-9]+\s/;
-    let imageUpdate = {};
-    imageUpdate = {image:"Sie müssen ein Bild eingeben"};
-    let titleUpdate = {};
-    titleUpdate = {title:"Bitte geben Sie den Produktnamen ein"};
-    let producerUpdate = {};
-    producerUpdate = {producer:"Bitte geben Sie den Herstellernamen ein"};
-    let categoriesUpdate = {};
-    categoriesUpdate = {categories:"Bitte geben Sie die Kategorien nur mit Leerzeichen getrennt ein. Erst die Haupkategorie(z.B. Herren), dann die Unterkategorie(z.B. Sportschuhe)"};
-    let descUpdate = {};
-    descUpdate = {desc:"Bitte geben Sie die Produktbeschreibung ein"};
-    let priceUpdate = {};
-    priceUpdate = {price:"Bitte geben Sie den Preis ein"};
-    let currencyUpdate = {};
-    currencyUpdate = {currency:"Bitte geben Sie die Währung ein. Standard ist €-"};
-    let colorsUpdate = {};
-    colorsUpdate = {colors:"Bitte geben Sie die Farben in english klein geschrieben nur mit Leerzeichen getrennt ein."};
-    let sizesUpdate = {};
-    sizesUpdate = {sizes:"Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Erst muss ein Leerzeichen kommen"};
-    let inStockUpdate = {};
-    inStockUpdate = {inStock:"Bitte geben Sie true ein, wenn im Bestand, false, wenn nein"};
+  const checkValidation = useCallback(()=>{
+    let errors = formerror;
+    const copiedCategories = [...formdata.categories];
+    const copiedColors = [...formdata.colors];
+    const copiedSizes = [...formdata.sizes];
+    
     if(filedata.image === null){
-      setFormerror(formerror=>({
-        ...formerror,
-         ...imageUpdate
-      }))
+     errors.image = "Sie müssen ein Bild eingeben"
+    } else{
+      errors.image = "";
     }
-    else if(formdata.title === ""){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...titleUpdate
-      }))
+    if(formdata.title === ""){
+      errors.title = "Bitte geben Sie den Produktnamen ein"
+    } else{
+      errors.title = "";
     }
-    else if(formdata.producer === ""){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...producerUpdate
-      }))
+    if(formdata.producer === ""){
+      errors.producer = "Bitte geben Sie den Herstellernamen ein"
+    } else{
+      errors.producer = "";
     }
-    else if(!formdata.categories.length || !formdata.categories.filter((item)=>item.match(CategoriePattern))){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...categoriesUpdate
-      })) 
+    if(!copiedCategories.length){
+      errors.categories = "Bitte geben Sie die Kategorien nur mit Leerzeichen getrennt ein. Erst die Haupkategorie(z.B. Herren), dann die Unterkategorie(z.B. Sportschuhe)"
     }
-    else if(formdata.desc ===  ""){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...descUpdate
-          
-      }))
+     else{
+      errors.categories = "";
     }
-    else if(formdata.price ===  ""){
-      setFormerror(formerror=>({
-        ...formerror,
-         ...priceUpdate
-      }))
+    if(formdata.desc ===  ""){
+      errors.desc = "Bitte geben Sie eine Produktbeschreibung ein"
+    } else{
+      errors.desc = "";
     }
-    else if(formdata.currency ===  ""){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...currencyUpdate
-      }))
+    if(formdata.price ===  ""){
+      errors.price = "Bitte geben Sie den Preis ein"
+    } else{
+      errors.price = "";
     }
-    else if(!formdata.colors.length || !formdata.colors.filter((item)=>item.match(ColorsPattern))){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...colorsUpdate
-      })) 
+    if(formdata.currency ===  ""){
+      errors.currency = "Bitte geben Sie die Währung ein, Standard: €"
+    } else{
+      errors.currency = "";
     }
-    else if(!formdata.sizes.length || !formdata.sizes.filter((item)=>item.match(SizesPattern))){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...sizesUpdate
-      })) 
-    }
-    else if(formdata.inStock ===  ""){
-      setFormerror(formerror=>({
-        ...formerror,
-          ...inStockUpdate
-      }))
+    if(!copiedColors.length){
+      errors.colors = "Bitte geben Sie die Farben in Englisch klein geschrieben nur mit Leerzeichen getrennt ein."
     }
     else{
-       const productData = new FormData();
-    productData.append("title", formdata.title)
-    productData.append("producer", formdata.producer);
-    productData.append("categories", JSON.stringify(formdata.categories))
-    productData.append("desc", formdata.desc);
-    productData.append("price", formdata.price);
-    productData.append("currency", formdata.currency);
-    productData.append("colors", JSON.stringify(formdata.colors))
-    productData.append("sizes", JSON.stringify(formdata.sizes))
-    productData.append("inStock", formdata.inStock);
-    productData.append("image", filedata.image!)
-
-    dispatch(createProduct(productData));
-    dispatch(getAllProducts())
-    props.setProducts(allProducts);
-    toast.info("Produckt wurde erfolgreich angelegt");
+      errors.colors = "";
     }
-   
-  }
+    if(!copiedSizes.length){
+      errors.sizes = "Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Erst muss ein Leerzeichen kommen"
+    }
+    else{
+      errors.sizes = ""
+    }
+    if(formdata.inStock ===  ""){
+    errors.inStock = "Wenn Produkt im Bestand, true, ansonsten false eingeben"
+    } else{
+      errors.inStock = "";
+    }
+   return setFormerror(errors);
+  },[filedata.image, formdata.categories, formdata.colors, formdata.currency, formdata.desc, formdata.inStock, formdata.price, formdata.producer, formdata.sizes, formdata.title, formerror]);
 
+  useEffect(()=>{
+    checkValidation();
+  },[formdata, filedata,checkValidation])
+const onSubmit = (e:React.FormEvent)=>{
+  e.preventDefault();
+  const productData = new FormData();
+  productData.append("title", formdata.title)
+  productData.append("producer", formdata.producer);
+  productData.append("categories", JSON.stringify(formdata.categories))
+  productData.append("desc", formdata.desc);
+  productData.append("price", formdata.price);
+  productData.append("currency", formdata.currency);
+  productData.append("colors", JSON.stringify(formdata.colors))
+  productData.append("sizes", JSON.stringify(formdata.sizes))
+  productData.append("inStock", formdata.inStock);
+  productData.append("image", filedata.image!)
+
+  dispatch(createProduct(productData));
+  props.setProducts(allProducts);
+  toast.info("Produkt wurde erfolgreich angelegt");
    
+}
   return (
     <Container>
       <TitleWrapper>
         <Title>Produkt einpflegen</Title>
       </TitleWrapper>
+      <ToastContainer/>
       <Form onSubmit={onSubmit}>
       <FormGroup>
           <label htmlFor='image'>Bild hochladen</label>
@@ -368,7 +275,6 @@ console.log(formerror);
           <Button>Absenden</Button>
         </ButtonWrapper>
       </Form>
-      <ToastContainer/>
     </Container>
   )
 }

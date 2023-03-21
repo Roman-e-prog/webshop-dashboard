@@ -11,7 +11,7 @@ export interface DescriptionItem{
     updatedAt: Date,
 }
 export interface InitialState{
-    descriptionItem: DescriptionItem[],
+    descriptionItem: DescriptionItem,
     allDescriptionItems: DescriptionItem[],
     isLoading: boolean,
     isSuccess:boolean,
@@ -19,7 +19,7 @@ export interface InitialState{
     message:string
 }
 const initialState: InitialState = {
-    descriptionItem:[],
+    descriptionItem:{} as DescriptionItem,
     allDescriptionItems:[],
     isLoading:false,
     isSuccess:false,
@@ -44,7 +44,7 @@ export const createDescriptionItem = createAsyncThunk<DescriptionItem, object, A
       return thunkAPI.rejectWithValue(message as string)
     }
 });
-export const updateDescriptionItem = createAsyncThunk<DescriptionItem[], UpdateDescriptionData, AsyncThunkConfig>('descriptionItem/update', async (updateDescData, thunkAPI)=>{
+export const updateDescriptionItem = createAsyncThunk<DescriptionItem, UpdateDescriptionData, AsyncThunkConfig>('descriptionItem/update', async (updateDescData, thunkAPI)=>{
     try{
         const token = thunkAPI.getState().auth.user!.accessToken;
         return await descriptionItemService.updateDescriptionItem(updateDescData, token);
@@ -72,7 +72,7 @@ export const deleteDescriptionItem = createAsyncThunk<DescriptionItem, string, A
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const getDescriptionItem = createAsyncThunk<DescriptionItem[], string, AsyncThunkConfig>('descriptionItem/get', async (Id, thunkAPI)=>{
+export const getDescriptionItem = createAsyncThunk<DescriptionItem, string, AsyncThunkConfig>('descriptionItem/get', async (Id, thunkAPI)=>{
     try{
         return await descriptionItemService.getDescriptionItem(Id);
     }catch (error:any){
@@ -112,7 +112,7 @@ export const descriptionItemSlice = createSlice({
         .addCase(createDescriptionItem.fulfilled, (state,action)=>{
             state.isLoading = false;
             state.isSuccess = true;
-            state.descriptionItem.push(action.payload);
+            state.allDescriptionItems.push(action.payload);
         })
         .addCase(createDescriptionItem.rejected, (state, action:any)=>{
             state.isLoading = false;
@@ -127,10 +127,10 @@ export const descriptionItemSlice = createSlice({
             state.isSuccess = true;
             state.descriptionItem = action.payload;
         })
-        .addCase(updateDescriptionItem.rejected, (state, action:any)=>{
+        .addCase(updateDescriptionItem.rejected, (state, action)=>{
             state.isLoading = false;
             state.isError = true;
-            state.message = action.payload;
+            state.message = action.payload as string;
         })
         .addCase(deleteDescriptionItem.pending, (state)=>{
             state.isLoading = true;
@@ -138,7 +138,7 @@ export const descriptionItemSlice = createSlice({
         .addCase(deleteDescriptionItem.fulfilled, (state,action)=>{
             state.isLoading = false;
             state.isSuccess = true;
-            state.descriptionItem = state.descriptionItem.filter((item)=>item.id !== action.payload.id);
+            state.allDescriptionItems = state.allDescriptionItems.filter((item)=>item.id !== action.payload.id);
         })
         .addCase(deleteDescriptionItem.rejected, (state, action:any)=>{
             state.isLoading = false;

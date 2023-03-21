@@ -2,11 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
-import {useState, useEffect} from 'react';
-import {createDescriptionItem, getAllDescriptionItem, deleteDescriptionItem} from '../features/descriptionItems/descriptionItemSlice'
-import { toast } from 'react-toastify';
+import {useState, useEffect, useCallback} from 'react';
+import {createDescriptionItem, getAllDescriptionItem, deleteDescriptionItem} from '../features/descriptionItems/descriptionItemSlice';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
+import { DescriptionItemSchema } from '../validations/descriptionItemValidation';
+import update from 'immutability-helper';
 const Container = styled.div`
   width:100%;
 `;
@@ -75,20 +78,24 @@ background:var(--coffee);
 `;
 const DescriptionItems = () => {
     const dispatch = useAppDispatch();
-    const selector = useAppSelector((state:RootState)=>state.descriptionItem);
-    const {allDescriptionItems, isError, isLoading, message} = selector;
-
+    const allDescriptionItems = useAppSelector((state)=>state.descriptionItem.allDescriptionItems);
+    const isError = useAppSelector((state)=>state.descriptionItem.isError);
+    const isLoading = useAppSelector((state)=>state.descriptionItem.isLoading);
+    const message = useAppSelector((state)=>state.descriptionItem.message);
+    //validation
+    const [formerror, setFormerror] = useState({
+      title:false,
+      text:false,
+      error:[],
+  })
+console.log(formerror);
     useEffect(() => {
       if(isError){
         toast.error(message);
       }
       dispatch(getAllDescriptionItem())
     }, [dispatch, isError, message]);
-    //delete
-    const handleDelete = (id:string)=>{
-      dispatch(deleteDescriptionItem(id));
-      dispatch(getAllDescriptionItem);
-    }
+ 
     //create
     const [formdata, setFormdata] = useState({
       title:"",
@@ -101,19 +108,51 @@ const DescriptionItems = () => {
         [e.target.name]:e.target.value
       }))
     }
-    const onSubmit = (e:React.FormEvent)=>{
+       //delete
+       const handleDelete = (id:string)=>{
+        dispatch(deleteDescriptionItem(id));
+      }
+    const onSubmit = useCallback( async (e:React.FormEvent)=>{
+      console.log("I am triggered");
       e.preventDefault();
       const descriptionItemData ={
         title,
         text,
       }
-      dispatch(createDescriptionItem(descriptionItemData))
-    }
+      const isFormValid = await DescriptionItemSchema.isValid(descriptionItemData, {
+        abortEarly: false, // Prevent aborting validation after first error
+      })
+       console.log(isFormValid);
+      if(isFormValid){
+        dispatch(createDescriptionItem(descriptionItemData))
+        dispatch(getAllDescriptionItem())
+      }
+      else{
+             // If form is not valid, check which fields are incorrect:
+             DescriptionItemSchema.validate(descriptionItemData, { abortEarly: false }).catch((err) => {
+              const errors = err.inner.reduce((acc:any, error:any) => {
+                return {
+                  ...acc,
+                  [error.path]: error.errors,
+                }
+              }, {})
+                console.log(errors);
+              // Update form errors state:
+              setFormerror((prevErrors:any) =>
+                update(prevErrors, {
+                  $set: errors,
+                })
+              )
+            })
+      }
+      
+    },[dispatch, title, text])
     if(isLoading){
       return <Spinner/>
     }
   return (
     <Container>
+      <ToastContainer/>
       <Table>
           <thead>
               <tr>
@@ -138,13 +177,19 @@ const DescriptionItems = () => {
         <FormGroup>
           <label htmlFor="title">Titel</label>
           <input type="text" name="title" id="title" required value={title} onChange={(e)=>handleChange(e)}/>
+          <div>
+                {formerror.title && <span>{formerror.title}</span>}
+            </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor="text">Text</label>
-          <textarea cols={10} rows={10} name="text" required value={text} onChange={(e)=>handleChange(e)}></textarea>
+          <textarea cols={10} rows={10} name="text" id="text" required value={text} onChange={(e)=>handleChange(e)}></textarea>
+          <div>
+                {formerror.text && <span>{formerror.text}</span>}
+            </div>
         </FormGroup>
         <ButtonWrapper>
-          <SendButton>Absenden</SendButton>
+          <SendButton onClick={onSubmit}>Absenden</SendButton>
         </ButtonWrapper>
       </Form>
     </Container>

@@ -28,7 +28,7 @@ const persistConfig = {
 
 const persistedUserReducer = persistReducer(persistConfig,userReducer) //state we want to persist
 const persistedProductReducer = persistReducer(persistConfig, productsReducer)
-const persistedSliderReducer = persistReducer(persistConfig, sliderItemsReducer)
+// const persistedSliderReducer = persistReducer(persistConfig, sliderItemsReducer)
 const persistedCartdataReducer = persistReducer(persistConfig, cartdataReducer )
 
 export const store = configureStore({
@@ -37,7 +37,7 @@ export const store = configureStore({
     user:persistedUserReducer,
     products:persistedProductReducer,
     descriptionItem:descriptionItemReducer,
-    sliderItems:persistedSliderReducer,
+    sliderItems:sliderItemsReducer,
     newsletterOrders:newsletterOrderReducer,
     messages:messagesReducer,
     cartdata:persistedCartdataReducer,

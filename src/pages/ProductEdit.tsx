@@ -104,8 +104,6 @@ const ProductEdit = () => {
     }
   }, [dispatch, isError, message, id]);
 
-console.log(product);
-console.log(product.image);
    const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
     title:"",
     producer:"",
@@ -160,7 +158,6 @@ console.log(product.image);
     productData.append("title", formdata.title);
     productData.append("producer", formdata.producer);
     productData.append("categories", JSON.stringify(formdata.categories));
-    productData.append("categories", JSON.stringify(formdata.categories));
     productData.append("desc", formdata.desc);
     productData.append("price", formdata.price);
     productData.append("currency", formdata.currency);
@@ -168,9 +165,7 @@ console.log(product.image);
     productData.append("sizes", JSON.stringify(formdata.sizes));
     productData.append("inStock", formdata.inStock);
     productData.append("image", filedata.image!);
-    for(let value of productData){
-      console.log(value);
-    }
+   
     const updatedata:UpdateProductData = {
       productData:productData,
       id:id!,
@@ -190,46 +185,46 @@ console.log(product.image);
           <InputGroup>
           <FormGroup>
             <label htmlFor="image">Bild</label>
-            <input src="file" name="image" id="image" onChange={handleFileChange}/>
+            <input type="file" name="image" id="image" onChange={handleFileChange}/>
             {preview ? <img src={preview} alt="Vorschau" title="Vorschau"/>:
               <img src={product.image} alt={product.title} title={product.title}/>
             }
           </FormGroup>
           <FormGroup>
             <label htmlFor="title">Produktname</label>
-            <input src="text" name="title" id="title" defaultValue={title} onChange={(e)=>setFormdata({...formdata, title:e.target.value})}/>
+            <input type="text" name="title" id="title" required defaultValue={title} onChange={(e)=>setFormdata({...formdata, title:e.target.value})}/>
           </FormGroup>
           <FormGroup>
             <label htmlFor="producer">Hersteller</label>
-            <input src="text" name="producer" id="producer" defaultValue={producer} onChange={(e)=>setFormdata({...formdata, producer:e.target.value})}/>
+            <input type="text" name="producer" id="producer" required defaultValue={producer} onChange={(e)=>setFormdata({...formdata, producer:e.target.value})}/>
           </FormGroup>
           <FormGroup>
             <label htmlFor="categories">Kategorie</label>
-            <input src="text" name="categories" id="categories" defaultValue={categories} onChange={(e)=>setFormdata({...formdata, categories:[e.target.value]})}/>
+            <input type="text" name="categories" id="categories" required defaultValue={categories} onChange={(e)=>setFormdata({...formdata, categories:[e.target.value]})}/>
           </FormGroup>
           <FormGroup>
             <label htmlFor="desc">Produktbeschreibung</label>
-            <textarea name="desc" cols={10} rows={10} defaultValue={desc} onChange={(e)=>setFormdata({...formdata, desc:e.target.value})}></textarea>
+            <textarea name="desc" cols={10} rows={10} required defaultValue={desc} onChange={(e)=>setFormdata({...formdata, desc:e.target.value})}></textarea>
           </FormGroup>
           <FormGroup>
             <label htmlFor="price">Preis</label>
-            <input src="text" name="price" id="price" defaultValue={price} onChange={(e)=>setFormdata({...formdata, price:e.target.value})}/>
+            <input type="text" name="price" id="price" required defaultValue={price} onChange={(e)=>setFormdata({...formdata, price:e.target.value})}/>
           </FormGroup>
           <FormGroup>
             <label htmlFor="currency">Währung</label>
-            <input src="text" name="currency" id="currency" defaultValue={currency} onChange={(e)=>setFormdata({...formdata, currency:e.target.value})}/>
+            <input type="text" name="currency" id="currency" required defaultValue={currency} onChange={(e)=>setFormdata({...formdata, currency:e.target.value})}/>
           </FormGroup>
           <FormGroup>
             <label htmlFor="colors">Farben</label>
-            <input src="text" name="colors" id="colors" defaultValue={colors} onChange={(e)=>setFormdata({...formdata, colors:[e.target.value]})}/>
+            <input type="text" name="colors" id="colors" required defaultValue={colors} onChange={(e)=>setFormdata({...formdata, colors:[e.target.value]})}/>
           </FormGroup>
           <FormGroup>
             <label htmlFor="sizes">Größen</label>
-            <input src="text" name="sizes" id="sizes" defaultValue={sizes} onChange={(e)=>setFormdata({...formdata, sizes:[e.target.value]})}/>
+            <input type="text" name="sizes" id="sizes" required defaultValue={sizes} onChange={(e)=>setFormdata({...formdata, sizes:[e.target.value]})}/>
           </FormGroup>
           <FormGroup>
             <label htmlFor="inStock">Im Bestand</label>
-            <input src="text" name="inStock" id="inStock" defaultValue={String(inStock)} onChange={(e)=>setFormdata({...formdata, inStock:e.target.value})}/>
+            <input type="text" name="inStock" id="inStock" defaultValue={String(inStock)} onChange={(e)=>setFormdata({...formdata, inStock:e.target.value})}/>
           </FormGroup>
           <FormGroup>
             <h3 className='datelable'>Erstellt am:</h3>
