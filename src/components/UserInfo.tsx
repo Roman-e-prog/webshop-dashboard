@@ -4,14 +4,16 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
 import {getAllUser} from '../features/user/userSlice'
 import { Link } from 'react-router-dom';
-import {toast} from 'react-toastify';
 import Spinner from './Spinner';
+import {small, middle} from '../responsive';
 const Container = styled.div`
     flex:1;
 `;
 const Title = styled.h3`
     font-size:26px;
     margin-bottom:10px;
+    ${small({fontSize:"16px"})}
+    ${middle({fontSize:"16px"})}
 `;
 const ContentWrapper = styled.div`
     width:100%;
@@ -40,6 +42,9 @@ const Table = styled.table`
   & #btn{
     text-align:center
   }
+  & .city{
+    ${small({display:"none"})}
+  }
 `;
 const ShowButton = styled.button`
     background: var(--coffee);
@@ -58,7 +63,7 @@ const UserInfo = () => {
 
   useEffect(()=>{
     if(isError){
-      toast.error(message)
+      window.alert(message)
     }
     initFetch();
   }, [initFetch, isError, message]);
@@ -73,7 +78,7 @@ const UserInfo = () => {
             <thead>
             <tr>
                 <th>Kundename</th>
-                <th>Stadt</th>
+                <th className="city">Stadt</th>
                 <th>Kundendaten</th>
               </tr>
               </thead>
@@ -81,7 +86,7 @@ const UserInfo = () => {
                {allUser && allUser.map((item)=>(
                 <tr key={item._id}>
                   <td>{item.nachname}</td>
-                  <td>{item.city}</td>
+                  <td className="city">{item.city}</td>
                   <td id="btn"><ShowButton><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Benutzer anzeigen</Link></ShowButton></td>
                 </tr>
                ))}

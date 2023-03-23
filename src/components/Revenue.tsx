@@ -2,12 +2,14 @@ import React, {useEffect} from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { getIncome } from '../features/orderdata/orderdataSlice';
+import {small, middle} from '../responsive';
 const Container = styled.div`
     width:100%;
 `;
 const Einnahmen = styled.div`
     width:100%;
     display:flex;
+    ${small({flexDirection:"column"})}
 `;
 const TagesEinnahmen = styled.div`
     flex:1;
@@ -29,10 +31,14 @@ const JahresEinnahmen = styled.div`
 `;
 const Title = styled.h3`
     font-size:20px;
+    ${middle({fontSize:"16px"})}
+    ${small({fontSize:"12px"})}
 `;
 const Amount = styled.span`
     font-size:30px;
     margin:20px 0;
+    ${middle({fontSize:"16px"})}
+    ${small({fontSize:"12px"})}
 `;
 
 const Revenue = (props:{month:string[]}) => {

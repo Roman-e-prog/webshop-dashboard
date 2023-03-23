@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-import {FaShoePrints} from 'react-icons/fa'
-import {IoMdNotificationsOutline, IoMdSettings} from 'react-icons/io'
+import {FaShoePrints} from 'react-icons/fa';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
 import {AiOutlineLogout} from 'react-icons/ai'
@@ -9,6 +8,7 @@ import { logout, reset } from '../features/authSlice';
 import { useNavigate } from 'react-router-dom';
 import {persistStore} from 'redux-persist'
 import { store } from '../app/store';
+import {small, middle} from '../responsive';
 const persistor = persistStore(store);
 const Container = styled.nav`
     width:100%;
@@ -28,12 +28,15 @@ const Logo = styled.div`
   align-items:center;
   color:var(--white);
   font-size:30px;
+  ${middle({fontSize:"20px"})}
 
   & span{
     font-family:vivaldi;
+    ${small({fontSize:"12px"})}
   }
   & h2{
     margin-left:20px;
+    ${small({fontSize:"12px", marginLeft:"4px"})}
   }
 `;
 const Greeting = styled.div`
@@ -42,6 +45,8 @@ const Greeting = styled.div`
   align-items:center;
   color:var(--white);
   font-size:30px;
+  ${middle({fontSize:"20px"})}
+  ${small({fontSize:"12px", marginLeft:"4px"})}
 `;
 const Menue = styled.div`
   flex:1;
@@ -73,8 +78,6 @@ const Navbar:React.FC = () => {
       <Greeting>{`Hallo ${user!.username}`}</Greeting>
       <Menue>
         {user && <AiOutlineLogout style={{color:"var(--white)", fontWeight:"600", marginRight:"20px", fontSize:"26px"}} onClick={onLogout} title="Logout"/>}
-        <IoMdNotificationsOutline style={{marginRight:"20px"}}/>
-        <IoMdSettings style={{marginRight:"20px"}}/>
       </Menue>
     </Container>
   )

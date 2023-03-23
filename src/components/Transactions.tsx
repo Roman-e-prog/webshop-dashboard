@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector} from '../app/hooks';
-import { Cartdata, getAllCartdata } from '../features/cartdata/cartSlice';
-import Spinner from './Spinner';
+import { getAllCartdata } from '../features/cartdata/cartSlice';
+import {small, middle} from '../responsive';
 const Container = styled.div`
     flex:2;
     display:flex;
@@ -12,6 +12,8 @@ const Container = styled.div`
 const Title = styled.h3`
     font-size:26px;
     margin-bottom:10px;
+    ${small({fontSize:"16px"})}
+    ${middle({fontSize:"16px"})}
 `;
 const ContentWrapper = styled.div`
     width:100%;
@@ -20,9 +22,17 @@ const ContentWrapper = styled.div`
 `;
 const DataTable = styled.table`
     width:80%;
-    & th, td{
-        width:20%;
+    ${small({width:"100%"})}
+    & th,td {
         text-align:center;
+    }
+    & .netto{
+      display:flex;
+      & span{
+        width:80%;
+        display:flex;
+        justify-content:flex-end;
+      }
     }
     & button{
         background:var(--coffee);
@@ -31,6 +41,8 @@ const DataTable = styled.table`
         padding:5px;
         border:none;
         cursor: pointer;
+    }
+    & .netto{
     }
 `;
 const Transactions = () => {
@@ -62,10 +74,10 @@ const sorteddata = [...allCartdata].sort((a,b)=>a.createdAt > b.createdAt ? -1 :
                     <tr key={item._id}>
                       <td>{item.user.nachname}</td>
                       <td>{new Date(item.createdAt).toLocaleDateString("de-De",{
-                        day:'numeric',
-                        month:'long'
+                        day:'2-digit',
+                        month:'2-digit'
                       })}</td>
-                      <td>{item.netto} €</td>
+                      <td className="netto"><span>{item.netto}</span> €</td>
                     </tr>
                   ))
                 }

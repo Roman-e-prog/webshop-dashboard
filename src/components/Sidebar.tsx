@@ -6,9 +6,8 @@ import {HiTrendingUp} from 'react-icons/hi'
 import {MdTimeline, 
     MdOutlineBarChart,
     MdMailOutline,
-    MdOutlineFeedback,
-    MdOutlineNotificationImportant, 
-    MdOutlineManageAccounts} from 'react-icons/md'
+    MdOutlineNotificationImportant} from 'react-icons/md';
+import {small, middle} from '../responsive'
 const Container = styled.div`
     flex:1;
 `;
@@ -16,7 +15,6 @@ const Menue = styled.ul`
     display:flex;
     flex-direction:column;
     width:100%;
-    
 `;
 const MenueItem = styled.li`
     display:flex;
@@ -26,6 +24,8 @@ const MenueItem = styled.li`
     padding:10px;
     cursor: pointer;
     font-size:20px;
+    ${middle({padding:"5px"})}
+    ${small({fontSize:"16px"})}
 `;
 const Sidebar = () => {
   return (
@@ -62,18 +62,8 @@ const Sidebar = () => {
         </MenueItem>
 
         <MenueItem>
-            <MdOutlineFeedback/>
-            <Link to="/feedback" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Feedback</Link>
-        </MenueItem>
-
-        <MenueItem>
             <MdOutlineNotificationImportant/>
             <Link to="/messages" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Nachrichten</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <MdOutlineManageAccounts/>
-            <Link to="/manage" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Manage</Link>
         </MenueItem>
 
         <MenueItem>
@@ -82,38 +72,6 @@ const Sidebar = () => {
 
         <MenueItem>
             <Link to="/products" className="link" style={{color:"var(--darkGray)"}}>Produkte</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/productlistChild" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Kinder</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/productlistWomen" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Damen</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/productlistMen" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Herren</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/productlistSportschuhe" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Sportschuhe</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/productlistSneaker" className="link" style={{color:"var(--darkGray)"}}>Produkt Menue Sneaker</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/cardImages" className="link" style={{color:"var(--darkGray)"}}>Bilder Frontseite Produktrubriken</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/sneakerImage" className="link" style={{color:"var(--darkGray)"}}>Hintergrundbild Sneaker</Link>
-        </MenueItem>
-
-        <MenueItem>
-            <Link to="/newsletterBackground" className="link" style={{color:"var(--darkGray)"}}>Newsletter Hintergrund</Link>
         </MenueItem>
 
         <MenueItem>

@@ -16,17 +16,17 @@ const FormWrapper = styled.div`
 const SearchForm = styled.form`
   display:flex;
   align-items:center;
-  width:40%;
+  width:60%;
 `;
 const SearchInput = styled.input`
-  flex:3;
+  width:70%;
   height:40px;
   background:var(--white);
   padding:5px;
   border:none;
 `;
 const SearchButton = styled.button`
-    flex:1;
+    width:30%;
     height:40px;
     background:var(--darkGray);
     border:none;
