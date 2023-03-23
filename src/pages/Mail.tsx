@@ -6,10 +6,14 @@ import Pagination from '../components/Pagination';
 import Spinner from '../components/Spinner';
 import { getAllNewsletterOrders } from '../features/newsletterOrders/newsletterOrderSlice';
 import emailjs from '@emailjs/browser';
+import {small} from '../responsive';
 const Container = styled.div`
   width:100%;
 `;
 const NewsletterOrder = styled.div`
+  width:100%;
+`;
+const TableWrapper = styled.div`
   width:100%;
 `;
 const Table = styled.table`
@@ -24,12 +28,14 @@ const Table = styled.table`
     padding:1px;
     text-align:center;
     font-weight:400;
+    ${small({fontSize:"12px", marginRight:"1px"})}
   }
   & td{
     border: 1px solid var(--coffee);
     margin-right:5px;
     text-align:left;
     padding:2px;
+    ${small({fontSize:"12px", marginRight:"1px"})}
   }
 `;
 
@@ -69,26 +75,28 @@ const form = useRef<HTMLFormElement | null>(null);
   return (
     <Container>
       <NewsletterOrder>
-        <Table>
-          <thead>
-            <tr>
-              <th>Vorname</th>
-              <th>Nachname</th>
-              <th>E-mail</th>
-              <th>Thema</th>
-            </tr>
-          </thead>
-          <tbody>
-          {currentNewsletterOrders.map((item)=>(
-            <tr key={item._id}>
-              <td>{item.vorname}</td>
-              <td>{item.nachname}</td>
-              <td>{item.email}</td>
-              <td>{item.radiodata}</td>
-            </tr>
-          ))}
-          </tbody>
-        </Table>
+        <TableWrapper style={{overflowX:"auto"}}>
+          <Table>
+            <thead>
+              <tr>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>E-mail</th>
+                <th>Thema</th>
+              </tr>
+            </thead>
+            <tbody>
+            {currentNewsletterOrders.map((item)=>(
+              <tr key={item._id}>
+                <td>{item.vorname}</td>
+                <td>{item.nachname}</td>
+                <td>{item.email}</td>
+                <td>{item.radiodata}</td>
+              </tr>
+            ))}
+            </tbody>
+          </Table>
+        </TableWrapper>
         <Pagination
           total={newsletterOrders.length}
           limit={newsletterPerPage}

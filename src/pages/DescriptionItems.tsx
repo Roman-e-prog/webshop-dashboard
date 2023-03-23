@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { RootState } from '../app/store';
 import {useState, useEffect, useCallback} from 'react';
 import {createDescriptionItem, getAllDescriptionItem, deleteDescriptionItem} from '../features/descriptionItems/descriptionItemSlice';
 import 'react-toastify/dist/ReactToastify.css';
@@ -111,9 +110,9 @@ console.log(formerror);
        //delete
        const handleDelete = (id:string)=>{
         dispatch(deleteDescriptionItem(id));
+        dispatch(getAllDescriptionItem())
       }
     const onSubmit = useCallback( async (e:React.FormEvent)=>{
-      console.log("I am triggered");
       e.preventDefault();
       const descriptionItemData ={
         title,
@@ -122,7 +121,6 @@ console.log(formerror);
       const isFormValid = await DescriptionItemSchema.isValid(descriptionItemData, {
         abortEarly: false, // Prevent aborting validation after first error
       })
-       console.log(isFormValid);
       if(isFormValid){
         dispatch(createDescriptionItem(descriptionItemData))
         dispatch(getAllDescriptionItem())

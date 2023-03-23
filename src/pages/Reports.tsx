@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import { getAllQuantity } from '../features/cartdata/cartSlice';
 import { getIncome } from '../features/orderdata/orderdataSlice';
+import {small} from '../responsive';
 const Container = styled.div`
   width:100%;
 `;
@@ -30,12 +31,14 @@ const Datatable = styled.table`
         margin-right:5px;
         text-align:center;
         font-weight:400;
+        ${small({fontSize:"12px"})}
     }
     & td{
         border: 1px solid var(--coffee);
         margin-right:5px;
         text-align:left;
         padding:2px;
+        ${small({fontSize:"12px"})}
     }
 `;
 const Reports = () => {
@@ -52,7 +55,7 @@ const sortedQuantity = [...allQuantity].sort((a,b)=>a.total! < b.total! ? 1 :-1)
 useEffect(()=>{
   dispatch(getIncome())
 },[dispatch]);
-const sortedIncome = [...income].sort((a:any, b:any)=>a._id.day > b._id.day && a._id.month > b._id.month ? 1 :-1);
+const sortedIncome = [...income].sort((a:any, b:any)=> a._id.month > b._id.month &&  a._id.day > b._id.day? 1 :-1);
   return (
     <Container>
       <RennerWrapper>

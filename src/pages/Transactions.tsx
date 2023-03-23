@@ -4,12 +4,16 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import Pagination from '../components/Pagination';
 import Search from '../components/Search';
 import { getAllCartdata } from '../features/cartdata/cartSlice';
+import {small,middle} from '../responsive';
 const Container = styled.div`
-width:100%;
+  width:100%;
+`;
+const TableWrapper = styled.div`
+  width:100%;
 `;
 const Table = styled.table`
-    width:90%;
-    margin: 0 auto;
+  width:90%;
+  margin: 0 auto;
 
     & thead{
         background:var(--coffee);
@@ -19,12 +23,17 @@ const Table = styled.table`
         margin-right:5px;
         text-align:center;
         font-weight:400;
+        ${small({fontSize:"12px"})}
     }
     & td{
         border: 1px solid var(--coffee);
         margin-right:5px;
         text-align:left;
         padding:2px;
+        ${small({fontSize:"12px", marginRight:"2px", padding:"1px"})}
+    }
+    & .clientNumber{
+      ${middle({display:"none"})}
     }
     & #btn{
         border:none;
@@ -62,37 +71,39 @@ const filteredTransaction = sorteddata.filter((item)=>{
   return (
     <Container>
       <Search callback={(searchValue:string)=>setSearchValue(searchValue)}/>
-       <Table>
-            <thead>
-                <tr>
-                    <th>Kundenname</th>
-                    <th>Email</th>
-                    <th>Kundennummer</th>
-                    <th>Stadt</th>
-                    <th>Umsatz</th>
-                </tr>
-            </thead>
-            <tbody>
-                    {filteredTransaction ? filteredTransaction.map((item:any)=>(
-                       <tr key={item._id}>
-                        <td>{item.user.nachname}</td>
-                        <td>{item.user.email}</td>
-                        <td>{item.user._id}</td>
-                        <td>{item.user.city}</td>
-                        <td>{item.netto} €</td>
-                       </tr> 
-                    ))
-                    : currentTransaction.map((item:any)=>(
-                        <tr key={item._id}>
-                         <td>{item.user.vorname} {item.user.nachname}</td>
-                         <td>{item.user.email}</td>
-                         <td>{item.user._id}</td>
-                         <td>{item.user.city}</td>
-                         <td>{item.netto} €</td>
-                        </tr>
-                        ))}
-            </tbody>
-        </Table>
+        <TableWrapper style={{overflowX:"auto"}}>
+          <Table>
+                <thead>
+                    <tr>
+                        <th>Kundenname</th>
+                        <th>Email</th>
+                        <th className="clientNumber">Kundennummer</th>
+                        <th>Stadt</th>
+                        <th>Umsatz</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {filteredTransaction ? filteredTransaction.map((item:any)=>(
+                          <tr key={item._id}>
+                            <td>{item.user.nachname}</td>
+                            <td>{item.user.email}</td>
+                            <td className="clientNumber">{item.user._id}</td>
+                            <td>{item.user.city}</td>
+                            <td>{item.netto} €</td>
+                          </tr> 
+                        ))
+                        : currentTransaction.map((item:any)=>(
+                            <tr key={item._id}>
+                            <td>{item.user.vorname} {item.user.nachname}</td>
+                            <td>{item.user.email}</td>
+                            <td className="clientNumber">{item.user._id}</td>
+                            <td>{item.user.city}</td>
+                            <td>{item.netto} €</td>
+                            </tr>
+                            ))}
+                </tbody>
+            </Table>
+          </TableWrapper>
         <Pagination
           total={sorteddata.length}
           limit={transactionsPerPage}

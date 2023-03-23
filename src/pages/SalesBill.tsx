@@ -6,7 +6,7 @@ import { useParams} from 'react-router-dom';
 import { getCartdata} from '../features/cartdata/cartSlice';
 import html2canvas from 'html2canvas'
 import { jsPDF } from "jspdf";
-
+import {small, middle} from '../responsive';
 const Container = styled.div`
     width:100%;
 `; 
@@ -31,12 +31,20 @@ const Logo = styled.div`
   display:flex;
   align-items:center;
   color:var(--white);
+  ${small({flexDirection:"column"})}
+
+  & .logoContent{
+    font-size:26px; 
+    margin-right:5px;
+    ${middle({fontSize:"16px"})}
+  }
 `;
 const AdressWrapper = styled.div`
   width:100%;
-  height:150px;
+  /* height:150px; */
   padding:10px;
   display:flex;
+  flex-wrap:wrap;
 `;
 const CompanyAdress = styled.div`
   flex:1;
@@ -67,6 +75,10 @@ const ClientNumber = styled.span`
 
   & span{
     font-weight:600;
+    ${middle({fontWeight:"500"})}
+  }
+  & #clientnumber{
+    ${small({fontSize:"12px"})}
   }
 `;
 const BillNumber = styled.span`
@@ -74,10 +86,15 @@ const BillNumber = styled.span`
 
 & span{
   font-weight:600;
+  ${middle({fontWeight:"500"})}
+}
+& #billnumber{
+  ${small({fontSize:"12px"})}
 }
 `;
 const Title = styled.h2`
   font-size:20px;
+  ${middle({fontSize:"16px"})}
 `;
 const BillContentWrapper = styled.div`
   width:100%;
@@ -90,6 +107,7 @@ const BillContent = styled.div`
     display:flex;
     padding: 0 20px;
     font-weight:600;
+    ${small({flexDirection:"column"})}
 
     & .productData{
       flex:1;
@@ -100,14 +118,17 @@ const PayContent = styled.div`
   width:100%;
   display:flex;
   justify-content:space-around;
+  ${small({flexDirection:"column"})}
 
   & .priceGroup{
     display:flex;
     flex-direction:column;
     padding:20px;
+    ${small({padding:"5px"})}
 
     & span{
       margin:10px;
+      ${small({margin:"5px"})}
     }
     & .pricing{
       font-weight:600;
@@ -160,8 +181,8 @@ const SalesBill = () => {
         <Bill ref={billRef}>
           <LogoWrapper>
           <Logo>
-            <span style={{fontSize:"26px", marginRight:"5px"}}>R A R</span><FaShoePrints style={{fontSize:"26px", marginRight:"5px"}}/>
-            <span style={{fontSize:"26px", marginRight:"5px"}}>Schuhmode</span>
+            <span className="logoContent">R A R</span><FaShoePrints className="logoContent"/>
+            <span className="logoContent">Schuhmode</span>
           </Logo>
           </LogoWrapper>
           <AdressWrapper>
@@ -175,8 +196,8 @@ const SalesBill = () => {
                   <span style={{marginRight:"2px"}}>{client?.plz}</span>
                   <span>{client?.city}</span>
                 </div>
-                <ClientNumber><span>Kundennummer: </span>{client?._id}</ClientNumber>
-                  <BillNumber><span>Rechungsnummer: </span>{copyCartdata._id}</BillNumber>
+                <ClientNumber><span>Kundennummer: </span><span id="clientnumber">{client?._id}</span></ClientNumber>
+                  <BillNumber><span>Rechungsnummer: </span><span id="billnumber">{copyCartdata._id}</span></BillNumber>
             </ClientAdress>
             <CompanyAdress>
               <span style={{fontWeight:"600"}}>RAR Schuhmode</span>

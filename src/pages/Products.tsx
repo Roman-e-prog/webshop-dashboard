@@ -76,11 +76,10 @@ const message = useAppSelector((state)=>state.products.message);
 
   const handleDelete = (id:string)=>{
     dispatch(deleteProduct(id));
-    dispatch(getAllProducts);
     setProducts(allProducts);
+    
   }
   
-
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(5);
   const lastIndex = currentPage * productsPerPage;
@@ -156,7 +155,7 @@ const message = useAppSelector((state)=>state.products.message);
               <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
               <td>{item.producer}</td>
               <td>{item._id}</td>
-              <td>{item.inStock}</td>
+              <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
               <td>{`${item.price} ${item.currency}`}</td>
               <td id="btn"><button><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}
               >Anzeigen</Link></button></td>
@@ -171,7 +170,7 @@ const message = useAppSelector((state)=>state.products.message);
               ))}</td>
               <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
               <td>{item._id}</td>
-              <td>{item.inStock}</td>
+              <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
               <td>{`${item.price} ${item.currency}`}</td>
               <td><button><Link to={`/showProduct/${item._id}`}>Anzeigen</Link></button></td>
               <td id="btn"><button onClick={()=>handleDelete(item._id)}>Löschen</button></td>

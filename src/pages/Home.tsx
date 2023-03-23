@@ -9,11 +9,13 @@ import Transactions from '../components/Transactions';
 import UserInfo from '../components/UserInfo';
 import { useEffect, useState, useMemo} from 'react';
 import { getUserStats } from '../features/user/userSlice';
+import {small} from '../responsive';
 const Container = styled.div`
   width:100%;
 `;
 const ZusatzInfos = styled.div`
   display:flex;
+  ${small({flexDirection:"column"})}
 `;
 const Home:React.FC = () => {
   const selector = useAppSelector((state:RootState)=>state.auth);
