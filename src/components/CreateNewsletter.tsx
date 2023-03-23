@@ -37,11 +37,10 @@ const CreateNewsletter = (props:{sendEmail:any, newsletterOrders:object[], form:
     }
     const [mail, setMail] = useState<any>([]);
     const filteredTheme = newsletterOrderdata.filter((item:any)=>item.radiodata === formdata.ressort);
-    console.log(filteredTheme);
+    
     const handleEmail = ()=>{
         if(filteredTheme){
             filteredTheme.map((item:any)=>setMail(mail.concat(item.email)))
-
         }
     }
   return (

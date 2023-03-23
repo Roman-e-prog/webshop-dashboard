@@ -1,9 +1,11 @@
 import React  from 'react'
 import styled from 'styled-components';
 import { LineChart, Line, CartesianGrid, XAxis, ResponsiveContainer, Tooltip} from 'recharts';
+import {small} from '../responsive';
 const Container = styled.div`
     width:90%;
     margin: 20px auto;
+    ${small({display:"none"})}
 `;
 const ChartTitle = styled.h3`
     font-size:26px;

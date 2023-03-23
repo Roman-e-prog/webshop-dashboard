@@ -190,11 +190,12 @@ const onSubmit = (e:React.FormEvent)=>{
 
   dispatch(createProduct(productData));
   props.setProducts(allProducts);
-  toast.info("Produkt wurde erfolgreich angelegt");
+  toast.success("Produkt wurde erfolgreich angelegt");
    
 }
   return (
     <Container>
+      <ToastContainer/>
       <TitleWrapper>
         <Title>Produkt einpflegen</Title>
       </TitleWrapper>
