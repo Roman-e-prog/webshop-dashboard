@@ -2,6 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { UpdateData } from '../../pages/UserDisplay';
 import userService from './userService';
+import { PURGE } from 'redux-persist'
 export interface User{
   _id?:string,
   id?:string,
@@ -121,6 +122,7 @@ export const userSlice = createSlice({
     },
     extraReducers(builder) {
       builder
+      .addCase(PURGE, ()=>initialState)
       .addCase(updateUser.pending, (state)=>{
         state.isLoading = true;
       })
