@@ -23,7 +23,7 @@ import NotFound from './pages/NotFound';
 import SalesBill from './pages/SalesBill';
 import ProtectedPage from './utils/ProtectedPage';
 import Login from './pages/Login';
-import {small} from './responsive';
+import {small, large} from './responsive';
 const Container = styled.div`
   width:100%;
 `;
@@ -38,6 +38,8 @@ const ContentWrapper = styled.div`
   border-left:1px solid var(--darkGray);
   padding:20px;
   ${small({padding:"4px", width:"50%"})};
+  ${large({padding:"10px"})};
+  overflow:hidden;
 `;
 const App:React.FC = ()=> {
     const admin = useAppSelector((state)=>state.auth.user?.isAdmin);
