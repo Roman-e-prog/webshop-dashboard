@@ -1,172 +1,177 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { RootState } from '../app/store';
+import { getAllUser } from '../features/user/userSlice';
 import Spinner from '../components/Spinner';
-import {getAllUser, deleteUser} from '../features/user/userSlice';
-import Search from '../components/Search';
+import { Link } from 'react-router-dom';
+import {AiFillEye, AiFillDelete} from 'react-icons/ai';
+import {small} from '../responsive';
 import Pagination from '../components/Pagination';
+import Search from '../components/Search';
 const Container = styled.div`
     width:100%;
 `;
-const ButtonWrapper = styled.div`
-    width:90%;
-    margin:5px auto;
-    display:flex;
-    padding:5px;
-`;
-const SortButton = styled.button`
-    padding:2px;
-    background:var(--coffee);
-    color:var(--white);
-    border:none;
-    margin-right:2px;
+const TableWrapper = styled.div`
+    width:100%;
+    overflow-x:"auto";
 `;
 const Table = styled.table`
-    width:90%;
-    margin: 0 auto;
+width:90%;
+margin: 0 auto;
 
-    & thead{
-        background:var(--coffee);
-        color:var(--white);
-    }
-    & th{
-        margin-right:5px;
-        text-align:center;
-        font-weight:400;
-    }
-    & td{
-        border: 1px solid var(--coffee);
-        margin-right:5px;
-        text-align:left;
-        padding:2px;
-    }
-    & #btn{
-        border:none;
-    }
-    & button{
-        padding:2px;
-        background:var(--coffee);
-        color:var(--white);
-        cursor: pointer;
-        border:none;
-        margin-left:10px;
-    }
+  & thead{
+      background:var(--coffee);
+      color:var(--white);
+  }
+  & th{
+      margin-right:5px;
+      text-align:center;
+      font-weight:400;
+      ${small({fontSize:"12px"})}
+  }
+  & td{
+      border: 1px solid var(--coffee);
+      margin-right:5px;
+      text-align:left;
+      padding:2px;
+      ${small({fontSize:"12px"})}
+  }
+  & .customerNumber{
+    ${small({display:"none"})}
+  }
+  & .btn{
+      border:none;
+  }
+  & button{
+      padding:2px;
+      background:var(--coffee);
+      color:var(--white);
+      cursor: pointer;
+      border:none;
+      margin-left:10px;
+  }
 `;
-  
+const ButtonWrapper = styled.div`
+  width:90%;
+  margin: 5px auto;
+  padding:5px;
+  display:flex;
+`;
+const SortButton = styled.button`
+  background:var(--coffee);
+  color:var(--white);
+  padding:2px;
+  margin-right:2px;
+  border:none;
+  ${small({fontSize:"12px"})}
+`;
 const User = () => {
-    const dispatch = useAppDispatch();
-    const selector = useAppSelector((state:RootState)=>state.user);
-    const {allUser, isError, isLoading, message} = selector;
-    
-    useEffect(()=>{
-        if(isError){
-            window.alert(message);
-        }
-        dispatch(getAllUser())
-    }, [dispatch, isError, message])
-    const [user,setUser] = useState(allUser);
-    //pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    const [userPerPage] = useState(5);
-    const lastIndex = currentPage * userPerPage;
-    const firstIndex = lastIndex - userPerPage;
-    const currentUser = user.slice(firstIndex, lastIndex);
-  
-    //search
-    const [searchValue, setSearchValue] = useState('');
-   
-
-    const filteredUser = user.filter((item) => {
-            return Object.values(item).join('').toLowerCase().includes(searchValue.toLowerCase())
-        }).slice(firstIndex, lastIndex)
-    //sort
-       function handleDefault(){
-        setUser([...user].sort((a,b)=>a.createdAt < b.createdAt ? -1 : 1));
+ const dispatch = useAppDispatch();
+ const allUser = useAppSelector((state)=>state.user.allUser);
+ const isError = useAppSelector((state)=>state.user.isError);
+ const isLoading = useAppSelector((state)=>state.user.isLoading);
+ const message = useAppSelector((state)=>state.user.message);
+    const [user, setUser] = useState<any>([])
+ useEffect(()=>{
+    if(isError){
+        toast.error(message)
     }
-    function handleNew(){
-        setUser([...user].sort((a,b)=>a.createdAt > b.createdAt ? -1: 1));
-    }
-    
-    function handleClient(){
-        setUser([...user].sort((a,b)=>{
-            if(a.nachname < b.nachname){
-                return -1;
-            }
-            else{
-                return 1;
-            }
-        }));
-    } 
-    function handleCity(){
-        setUser([...user].sort((a,b)=>{
-            if(a.city < b.city){
-                return -1;
-            }
-            else{
-                return 1;
-            }
-        }));
-    };
-
-   const handleDelete = (id:string)=>{
-    dispatch(deleteUser(id));
     dispatch(getAllUser());
-   } 
-    if(isLoading){
-        return <Spinner/>
+ },[dispatch, isError, message]);
+ useEffect(()=>{
+    if(allUser){
+        setUser(allUser);
     }
+ },[allUser])
+ const [currentPage, setCurrentPage] = useState(1);
+ const [userPerPage] = useState(5);
+ const lastIndex = currentPage * userPerPage;
+ const firstIndex = lastIndex - userPerPage;
+ const currentUser = user.slice(firstIndex, lastIndex);
+ //search
+ const [searchValue, setSearchValue]= useState('');
+ const filteredUser = user.filter((item:object)=>{
+   return Object.values(item).join('').toLowerCase().includes(searchValue.toLowerCase())
+ }).slice(firstIndex, lastIndex);
+ //sort
+ //sort
+ const handleDefault = ()=>{
+    setUser([...user].sort((a,b)=>a.createdAt < b.createdAt ? -1 : 1));
+  }
+  const handleNew = ()=>{
+    setUser([...user].sort((a,b)=>a.createdAt > b.createdAt ? -1 :1));
+  }
+  const handleAlphabet = ()=>{
+    setUser([...user].sort((a,b)=> a.nachname < b.nachname ? -1: 1))
+  }
+  const handleCity = ()=>{
+    setUser(
+      [...user].sort((a,b)=>{
+        if(a.city < b.city){
+          return -1;
+        }
+        else{
+          return 1;
+        }
+      }))
+  }
+ if(isLoading){
+    return <Spinner/>
+ }
   return (
     <Container>
-        <Search callback={(searchValue:string)=>setSearchValue(searchValue)}/>
+        <ToastContainer/>
+        <Search callback={(searchValue:string)=>setSearchValue(searchValue)} />
         <ButtonWrapper>
-            <SortButton onClick={handleDefault}>Zurücksetzen</SortButton>
-            <SortButton onClick={handleNew}>Neueste Zuerst</SortButton>
-            <SortButton onClick= {handleClient}>Kundennamen alphabetisch sortieren</SortButton>
-            <SortButton onClick={handleCity}>Kunden nach Stadt sortieren</SortButton>
-        </ButtonWrapper>
-        <Table>
-            <thead>
-                <tr>
-                    <th>Kundenname</th>
-                    <th>Email</th>
-                    <th>Kundennummer</th>
-                    <th>Stadt</th>
-                    <th>Kundendaten</th>
-                    <th>Löschen</th>
-                </tr>
-            </thead>
-            <tbody>
-                    {filteredUser ? filteredUser.map((item)=>(
-                       <tr key={item._id}>
-                        <td>{item.nachname}</td>
-                        <td>{item.email}</td>
-                        <td>{item._id}</td>
-                        <td>{item.city}</td>
-                        <td id="btn"><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Anzeigen</Link></button></td>
-                        <td id="btn"><button onClick={()=>handleDelete(item._id!)}>Löschen</button></td>
-                       </tr> 
-                    ))
-                    : currentUser.map((item)=>(
+        <SortButton onClick={handleDefault}>Standard</SortButton>
+        <SortButton onClick={handleNew}>Neueste zuerst</SortButton>
+        <SortButton onClick={handleAlphabet}>Alphabetisch sortieren</SortButton>
+        <SortButton onClick={handleCity}>Nach Stadt sortieren</SortButton>
+      </ButtonWrapper>
+        <TableWrapper>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Kundenname</th>
+                        <th className="customerNumber">Kundennummer</th>
+                        <th>Stadt</th>
+                        <th>Anz</th>
+                        <th>Entf</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredUser ? filteredUser.map((item:any)=>(
                         <tr key={item._id}>
-                         <td>{item.nachname}</td>
-                         <td>{item.email}</td>
-                         <td>{item._id}</td>
-                         <td>{item.city}</td>
-                         <td id="btn"><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Anzeigen</Link></button></td>
-                         <td id="btn"><button onClick={()=>handleDelete(item._id!)}>Löschen</button></td>
-                        </tr>
-                        ))}
-            </tbody>
-        </Table>
-        <Pagination total={user.length} 
-        limit={userPerPage} 
+                            <td>{item.nachname}</td>
+                            <td className="customerNumber">{item._id}</td>
+                            <td>{item.city}</td>
+                            <td className='btn'><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                            <td className='btn'><button><AiFillDelete title="Löschen"/></button></td>
+                        </tr>)) :
+                        currentUser.map((item:any)=>(
+                            <tr key={item._id}>
+                                <td>{item.nachname}</td>
+                                <td className="customerNumber">{item._id}</td>
+                                <td>{item.city}</td>
+                                <td className='btn'><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                                <td className='btn'><button><AiFillDelete title="Löschen"/></button></td>
+                            </tr>
+                    ))}
+                </tbody>
+            </Table>
+        </TableWrapper>
+        <Pagination
+        total={user.length}
+        limit={userPerPage}
         setCurrentPage={setCurrentPage}
         currentPage={currentPage}
-        />
+      />
     </Container>
   )
 }
 
 export default User
+
+
