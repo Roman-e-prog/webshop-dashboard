@@ -1,9 +1,10 @@
-import React, { ChangeEvent, useState, useEffect, useCallback} from 'react'
+import React, { ChangeEvent, useState} from 'react'
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector} from '../app/hooks';
 import {createProduct} from '../features/products/productsSlice';
+import {small} from '../responsive';
 const Container = styled.div`
     width:90%;
     margin: 10px auto;
@@ -28,7 +29,7 @@ const FormGroup = styled.div`
   & label{
     margin:5px 0;
     color:var(--darkGray);
-    font-size:17px;
+    font-size:18px;
   }
   & input, textarea{
     width:50%;
@@ -37,6 +38,7 @@ const FormGroup = styled.div`
     box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
+    ${small({width:"80%"})}
   }
 `;
 const ButtonWrapper = styled.div`
@@ -58,7 +60,7 @@ type FileData = {
 const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
   const dispatch = useAppDispatch();
   const allProducts = useAppSelector((state)=>state.products.allProducts)
-  const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
+  const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string, sale:string} >({
     title:"",
     producer:"",
     categories:[],
@@ -68,8 +70,9 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
     colors:[],
     sizes:[],
     inStock:"",
+    sale:"",
   })
-  const {title, producer, categories, desc, price, currency, colors, sizes, inStock} = formdata;
+  const {title, producer, categories, desc, price, currency, colors, sizes, inStock, sale} = formdata;
   
   const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>):void=>{
     setFormdata((prevState)=>({
@@ -108,13 +111,11 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
       sizes:"",
       inStock:"",
   })
-
-  const checkValidation = useCallback(()=>{
-    let errors = formerror;
-    const copiedCategories = [...formdata.categories];
-    const copiedColors = [...formdata.colors];
-    const copiedSizes = [...formdata.sizes];
-    
+ 
+const onSubmit = (e:React.FormEvent)=>{
+  e.preventDefault();
+  console.log("I am triggerred")
+  let errors = {...formerror};
     if(filedata.image === null){
      errors.image = "Sie müssen ein Bild eingeben"
     } else{
@@ -130,7 +131,7 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
     } else{
       errors.producer = "";
     }
-    if(!copiedCategories.length){
+    if(!formdata.categories.length){
       errors.categories = "Bitte geben Sie die Kategorien nur mit Leerzeichen getrennt ein. Erst die Haupkategorie(z.B. Herren), dann die Unterkategorie(z.B. Sportschuhe)"
     }
      else{
@@ -151,13 +152,13 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
     } else{
       errors.currency = "";
     }
-    if(!copiedColors.length){
+    if(!formdata.colors.length){
       errors.colors = "Bitte geben Sie die Farben in Englisch klein geschrieben nur mit Leerzeichen getrennt ein."
     }
     else{
       errors.colors = "";
     }
-    if(!copiedSizes.length){
+    if(!formdata.sizes.length){
       errors.sizes = "Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Erst muss ein Leerzeichen kommen"
     }
     else{
@@ -168,14 +169,7 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
     } else{
       errors.inStock = "";
     }
-   return setFormerror(errors);
-  },[filedata.image, formdata.categories, formdata.colors, formdata.currency, formdata.desc, formdata.inStock, formdata.price, formdata.producer, formdata.sizes, formdata.title, formerror]);
-
-  useEffect(()=>{
-    checkValidation();
-  },[formdata, filedata,checkValidation])
-const onSubmit = (e:React.FormEvent)=>{
-  e.preventDefault();
+    if(Object.values(errors).every(x=>x === "")){
   const productData = new FormData();
   productData.append("title", formdata.title)
   productData.append("producer", formdata.producer);
@@ -186,12 +180,16 @@ const onSubmit = (e:React.FormEvent)=>{
   productData.append("colors", JSON.stringify(formdata.colors))
   productData.append("sizes", JSON.stringify(formdata.sizes))
   productData.append("inStock", formdata.inStock);
+  productData.append("sale", formdata.sale);
   productData.append("image", filedata.image!)
 
   dispatch(createProduct(productData));
   props.setProducts(allProducts);
   toast.success("Produkt wurde erfolgreich angelegt");
-   
+    }
+  else{
+    return setFormerror(errors);
+  }
 }
   return (
     <Container>
@@ -205,75 +203,82 @@ const onSubmit = (e:React.FormEvent)=>{
           <label htmlFor='image'>Bild hochladen</label>
           <input type="file" name="image" id="image" required onChange={handleFileChange}/>
           {preview && <img src={preview} alt="Preview" title="Preview" style={{width:"250px", height:"175px", marginTop:"5px"}}/>}
-          <div>
-                <span>{formerror.image}</span>
+          <div className='error'>
+               {formerror.image && <span>{formerror.image}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='title'>Titel</label>
           <input type="text" name="title" id="title" required value={title} onChange={(e)=>handleChange(e)}/>
-          <div>
-                {formerror.title && <span>{formerror.title}</span>}
+          <div className='error'>
+                {formerror.title ? <span>{formerror.title}</span> : null}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='producer'>Hersteller</label>
           <input type="text" name="producer" id="producer" required value={producer}  onChange={(e)=>handleChange(e)}/>
-          <div>
+          <div className='error'>
                 {formerror.producer && <span>{formerror.producer}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='categories'>Kategorien</label>
           <input type="text" name="categories" id="categories" required value={categories}  onChange={(e)=>handleChange(e)}/>
-          <div>
+          <p>Bitte geben Sie die Kategorien nur mit Leerzeichen getrennt ein. Erst die Haupkategorie(z.B. Herren), dann die Unterkategorie(z.B. Sportschuhe)</p>
+          <div className='error'>
                 {formerror.categories && <span>{formerror.categories}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='desc'>Beschreibung</label>
           <textarea cols={10} rows={10} name="desc" required value={desc}  onChange={(e)=>handleChange(e)}></textarea>
-          <div>
+          <div className='error'>
                 {formerror.desc && <span>{formerror.desc}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='price'>Preis</label>
           <input type="text" name="price" id="price" required value={price}  onChange={(e)=>handleChange(e)}/>
-          <div>
+          <div className='error'>
                 {formerror.price && <span>{formerror.price}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='currency'>Währung</label>
           <input type="text" name="currency" id="currency" required value={currency}  onChange={(e)=>handleChange(e)}/>
-          <div>
+          <div className='error'>
                 {formerror.currency && <span>{formerror.currency}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='colors'>Farben</label>
           <input type="text" name="colors" id="colors" required value={colors}  onChange={(e)=>handleChange(e)}/>
-          <div>
+          <p>Bitte geben Sie die Farben in Englisch klein geschrieben nur mit Leerzeichen getrennt ein.</p>
+          <div className='error'>
                 {formerror.colors && <span>{formerror.colors}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='sizes'>Größen</label>
           <input type="text" name="sizes" id="sizes" required value={sizes}  onChange={(e)=>handleChange(e)}/>
+          <p>Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Erst muss ein Leerzeichen kommen</p>
         </FormGroup>
-        <div>
+        <div className='error'>
                 {formerror.sizes && <span>{formerror.sizes}</span>}
             </div>
         <FormGroup>
           <label htmlFor='inStock'>Im Bestand</label>
           <input type="text" name="inStock" id="inStock" required value={inStock}  onChange={(e)=>handleChange(e)}/>
-          <div>
+          <div className='error'>
                 {formerror.inStock && <span>{formerror.inStock}</span>}
             </div>
         </FormGroup>
+        <FormGroup>
+          <label htmlFor='sale'>Sale</label>
+          <input type="text" name="sale" id="sale" value={sale}  onChange={(e)=>handleChange(e)}/>
+        </FormGroup>
         <ButtonWrapper>
-          <Button>Absenden</Button>
+          <Button onClick={onSubmit}>Absenden</Button>
         </ButtonWrapper>
       </Form>
     </Container>

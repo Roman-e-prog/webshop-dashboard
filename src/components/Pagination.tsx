@@ -30,7 +30,7 @@ const Pagination = (props:{total:number, limit:number,setCurrentPage:React.Dispa
     }
   return (
     <Container>
-      <PaginationBar>
+      <PaginationBar style={{overflowX:"auto"}}>
         <PaginationButton onClick={()=>props.setCurrentPage(props.currentPage-1)}>Zurück</PaginationButton>
         {pages.map((item)=>(
             <PaginationItem key={item} onClick={()=>props.setCurrentPage(item)} className={item == props.currentPage ? "active" : ""}>{item}</PaginationItem>

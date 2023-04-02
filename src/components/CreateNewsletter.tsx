@@ -21,7 +21,7 @@ const CreateNewsletter = (props:{sendEmail:any, newsletterOrders:object[], form:
     useEffect(()=>{
         setNewsletterOrderData(props.newsletterOrders);
     },[props.newsletterOrders])
-    console.log(newsletterOrderdata);
+   
     
     const [formdata, setFormdata] = useState({
         ressort:"",
@@ -54,7 +54,7 @@ const CreateNewsletter = (props:{sendEmail:any, newsletterOrders:object[], form:
             </FormGroup>
             <FormGroup>
                 <label htmlFor='theme'>Thema</label>
-                <input type="text" name="theme" id="theme" value={theme}  onChange={(e)=>handleChange(e)}/>
+                <input type="text" name="message" id="theme" value={theme}  onChange={(e)=>handleChange(e)}/>
             </FormGroup>
             <FormGroup>
                 <label htmlFor='message'>Inhalt</label>

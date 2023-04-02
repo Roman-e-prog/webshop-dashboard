@@ -1,18 +1,21 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
 import Spinner from '../components/Spinner';
 import {getDescriptionItem, updateDescriptionItem} from '../features/descriptionItems/descriptionItemSlice';
+import {small} from '../responsive';
 const Container = styled.div`
     width:100%;
 `;
 const Form = styled.form`
     width:100%;
     display:flex;
+    ${small({flexDirection:"column"})}
 `;
 const InputGroup = styled.div`
     width:50%;
@@ -54,7 +57,6 @@ const FormGroup = styled.div`
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
     }
 `;
-
 const ButtonGroup = styled.div`
     width:40%;
     display:flex;
@@ -132,6 +134,7 @@ const DescriptionItemsEdit = () => {
     }
   return (
     <Container>
+        <ToastContainer/>
       <Form onSubmit={onSubmit}>
         <InputGroup>
             <FormGroup>
@@ -153,7 +156,6 @@ const DescriptionItemsEdit = () => {
         </InputGroup>
         <ButtonGroup>
             <UpdateButton onClick={onSubmit}>Update</UpdateButton>
-            
         </ButtonGroup>
       </Form>
       <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>

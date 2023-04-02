@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {useState, useEffect, useCallback} from 'react';
+import {AiFillEye, AiFillDelete} from 'react-icons/ai';
 import {createDescriptionItem, getAllDescriptionItem, deleteDescriptionItem} from '../features/descriptionItems/descriptionItemSlice';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
@@ -9,7 +10,11 @@ import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import { DescriptionItemSchema } from '../validations/descriptionItemValidation';
 import update from 'immutability-helper';
+import {small,middle} from '../responsive';
 const Container = styled.div`
+  width:100%;
+`;
+const TableWrapper = styled.div`
   width:100%;
 `;
 const Table = styled.table`
@@ -23,15 +28,24 @@ const Table = styled.table`
     margin-right:5px;
     text-align:center;
     font-weight:400;
+    ${middle({fontSize:"12px"})}
+    ${small({minWidth:"200px"})}
+  }
+  & .smallNone{
+    width:10%;
+    ${small({display:"none"})}
   }
   & td{
     border: 1px solid var(--coffee);
     margin-right:5px;
     text-align:left;
     padding:2px;
+    ${middle({fontSize:"12px"})}
+    ${small({width:"200px"})}
   }
   & #btn{
     border:none;
+    font-size:20px;
   }
   & button{
     background:var(--coffee);
@@ -45,7 +59,7 @@ const Form = styled.form`
   padding:10px;
 `;
 const FormGroup = styled.div`
-display:flex;
+  display:flex;
   flex-direction:column;
   margin-bottom:2px;
   & label{
@@ -60,6 +74,7 @@ display:flex;
     box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
+${small({width:"90%"})}
   }
 `;
 const ButtonWrapper = styled.div`
@@ -87,7 +102,6 @@ const DescriptionItems = () => {
       text:false,
       error:[],
   })
-console.log(formerror);
     useEffect(() => {
       if(isError){
         toast.error(message);
@@ -151,13 +165,14 @@ console.log(formerror);
   return (
     <Container>
       <ToastContainer/>
+      <TableWrapper style={{overflowX:"auto"}}>
       <Table>
           <thead>
               <tr>
                 <th style={{width:"20%"}}>Titel</th>
                 <th style={{width:"60%"}}>Text</th>
-                <th style={{width:"10%"}}>Daten Anzeige</th>
-                <th style={{width:"10%"}}>Löschen</th>
+                <th className="smallNone">Daten Anzeige</th>
+                <th className="smallNone">Löschen</th>
               </tr>
           </thead>
           <tbody>
@@ -165,24 +180,25 @@ console.log(formerror);
               <tr key={item._id}>
                 <td>{item.title}</td>
                 <td>{item.text}</td>
-                <td id="btn"><button><Link to={`/showDescriptionItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Bearbeiten</Link></button></td>
-                <td id="btn"><button onClick={()=>handleDelete(item._id!)}>Löschen</button></td>
+                <td id="btn"><button><Link to={`/showDescriptionItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                <td id="btn"><button onClick={()=>handleDelete(item._id!)}><AiFillDelete title="Löschen"/></button></td>
               </tr>
             ))} 
           </tbody>
       </Table>
+      </TableWrapper>
       <Form onSubmit={onSubmit}>
         <FormGroup>
           <label htmlFor="title">Titel</label>
           <input type="text" name="title" id="title" required value={title} onChange={(e)=>handleChange(e)}/>
-          <div>
+          <div className='error'>
                 {formerror.title && <span>{formerror.title}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor="text">Text</label>
           <textarea cols={10} rows={10} name="text" id="text" required value={text} onChange={(e)=>handleChange(e)}></textarea>
-          <div>
+          <div className='error'>
                 {formerror.text && <span>{formerror.text}</span>}
             </div>
         </FormGroup>
