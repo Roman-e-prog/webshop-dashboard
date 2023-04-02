@@ -16,6 +16,7 @@ export interface Product{
     colors:string[],
     sizes:string[],
     inStock:boolean,
+    sale:boolean,
     createdAt:Date,
     updatedAt?:Date,
 }
