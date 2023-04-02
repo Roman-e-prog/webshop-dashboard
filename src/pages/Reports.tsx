@@ -55,7 +55,7 @@ const sortedQuantity = [...allQuantity].sort((a,b)=>a.total! < b.total! ? 1 :-1)
 useEffect(()=>{
   dispatch(getIncome())
 },[dispatch]);
-const sortedIncome = [...income].sort((a:any, b:any)=> a._id.month > b._id.month &&  a._id.day > b._id.day? 1 :-1);
+const sortedIncome = [...income].sort((a:any, b:any)=> a._id.month < b._id.month? 1:-1);
   return (
     <Container>
       <RennerWrapper>

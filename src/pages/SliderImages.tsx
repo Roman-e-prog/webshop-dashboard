@@ -1,15 +1,19 @@
 import React, { ChangeEvent } from 'react'
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import {AiFillEye, AiFillDelete} from 'react-icons/ai';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { createSliderItem, getAllSliderItems, deleteSliderItem } from '../features/sliderItems/sliderItemSlice';
 import { useEffect, useState} from 'react';
 import Spinner from '../components/Spinner';
 import { Link } from 'react-router-dom';
-
+import {small, middle} from '../responsive';
 const Container = styled.div`
-width:100%;
+  width:100%;
+`;
+const TableWrapper = styled.div`
+  width:100%;
 `;
 const Table = styled.table`
  width:90%;
@@ -22,12 +26,17 @@ const Table = styled.table`
     margin-right:5px;
     text-align:center;
     font-weight:400;
+    ${small({fontSize:"12px"})}
+  }
+  & .smallNone{
+    ${small({display:"none"})}
   }
   & td{
     border: 1px solid var(--coffee);
     margin-right:5px;
     text-align:left;
     padding:2px;
+    ${small({fontSize:"12px"})}
   }
   & #btn{
     border:none;
@@ -54,6 +63,8 @@ const FormGroup = styled.div`
   }
   & input{
     width:50%;
+    ${middle({width:"70%"})}
+    ${small({width:"90%"})}
     border:none;
     padding:5px;
     box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
@@ -153,28 +164,30 @@ const onSubmit = (e:React.FormEvent)=>{
   return (
     <Container>
       <ToastContainer/>
-      <Table>
-        <thead>
-          <tr>
-            <th>Sliderbild</th>
-            <th>Vorgelesener Text</th>
-            <th>Titel</th>
-            <th>Details</th>
-            <th>Löschen</th>
-          </tr>  
-        </thead>
-        <tbody>
-          {sliderItems && sliderItems.map((item)=>(
-            <tr key={item._id}>
-              <td><img src={item.img} alt={item.alt} title={item.title} style={{width:"200px", height:"100px"}}/></td>
-              <td>{item.alt}</td>
-              <td>{item.title}</td>
-              <td id="btn"><button><Link to={`/showSliderItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Bearbeiten</Link></button></td>
-              <td id="btn"><button onClick={()=>handleDelete(item._id)}>Löschen</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <TableWrapper style={{overflowX:"auto"}}>
+        <Table>
+          <thead>
+            <tr>
+              <th>Sliderbild</th>
+              <th>Vorgelesener Text</th>
+              <th>Titel</th>
+              <th className="smallNone">Details</th>
+              <th className="smallNone">Löschen</th>
+            </tr>  
+          </thead>
+          <tbody>
+            {sliderItems && sliderItems.map((item)=>(
+              <tr key={item._id}>
+                <td id="image"><img src={item.img} alt={item.alt} title={item.title} style={{width:"200px", height:"100px"}}/></td>
+                <td>{item.alt}</td>
+                <td>{item.title}</td>
+                <td id="btn"><button><Link to={`/showSliderItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                <td id="btn"><button onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </TableWrapper>
       <Form onSubmit={onSubmit}>
         <FormGroup>
           <label htmlFor='img'>Bild hochladen</label>

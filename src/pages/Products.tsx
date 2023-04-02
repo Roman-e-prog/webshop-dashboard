@@ -8,27 +8,36 @@ import Spinner from '../components/Spinner';
 import Pagination from '../components/Pagination';
 import Search from '../components/Search';
 import CreateProduct from '../components/CreateProduct';
+import {AiFillEye, AiFillDelete} from 'react-icons/ai';
+import {middle} from '../responsive';
 const Container = styled.div`
   width:100%;
 `;
+const TableWrapper = styled.div`
+    width:90%;
+    margin: 0 auto;
+`;
 const Table = styled.table`
-  width:90%;
-  margin: 0 auto;
+  width:100%;
   & thead{
     background:var(--coffee);
     color:var(--white);
   }
   & th{
     margin-right:5px;
+    font-size:14px;
     padding:1px;
     text-align:center;
     font-weight:400;
+    ${middle({fontSize:"12px",  marginRight:"2px"})}
   }
   & td{
     border: 1px solid var(--coffee);
+    font-size:14px;
     margin-right:5px;
     text-align:left;
     padding:2px;
+    ${middle({fontSize:"12px", marginRight:"2px"})}
   }
   & #btn{
     border:none;
@@ -74,10 +83,10 @@ const message = useAppSelector((state)=>state.products.message);
     }
   }, [allProducts]);
 
-  const handleDelete = (id:string)=>{
-    dispatch(deleteProduct(id));
+  const handleDelete = async (id:string)=>{
+   await dispatch(deleteProduct(id));
+    dispatch(getAllProducts());
     setProducts(allProducts);
-    
   }
   
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,54 +140,53 @@ const message = useAppSelector((state)=>state.products.message);
         <SortButton onClick={handleAlphabet}>Alphabetisch sortieren</SortButton>
         <SortButton onClick={handleProducer}>Nach Hersteller sortieren</SortButton>
       </ButtonWrapper>
-      <Table>
-        <thead>
-          <tr>
-            <th>Produktname</th>
-            <th>Kategorie</th>
-            <th>Produktbild</th>
-            <th>Hersteller</th>
-            <th>Artikelnummer</th>
-            <th>Im Bestand</th>
-            <th>Preis</th>
-            <th>ProduktDetails</th>
-            <th>Löschen</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProduct ? filteredProduct.map((item:any)=>(
-            <tr key={item._id}>
-              <td>{item.title}</td>
-              <td>{item.categories.map((item:string[], index:number)=>(
-                <span key={index}>{item} </span>
-              ))}</td>
-              <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
-              <td>{item.producer}</td>
-              <td>{item._id}</td>
-              <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
-              <td>{`${item.price} ${item.currency}`}</td>
-              <td id="btn"><button><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}
-              >Anzeigen</Link></button></td>
-              <td id="btn"><button onClick={()=>handleDelete(item._id)}>Löschen</button></td>
+      <TableWrapper style={{overflowX:"auto"}}>
+        <Table>
+          <thead>
+            <tr>
+              <th>Produktname</th>
+              <th>Kategorie</th>
+              <th>Produktbild</th>
+              <th>Hersteller</th>
+              <th>Im Bestand</th>
+              <th>Preis</th>
+              <th>Details</th>
+              <th>Entf.</th>
             </tr>
-          ))
-          : currentProducts.map((item:any)=>(
-            <tr key={item._id}>
-              <td>{item.title}</td>
-              <td>{item.categories.map((item:string[], index:number)=>(
-                <span key={index}>{item} </span>
-              ))}</td>
-              <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
-              <td>{item._id}</td>
-              <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
-              <td>{`${item.price} ${item.currency}`}</td>
-              <td><button><Link to={`/showProduct/${item._id}`}>Anzeigen</Link></button></td>
-              <td id="btn"><button onClick={()=>handleDelete(item._id)}>Löschen</button></td>
-            </tr>
-          ))
-        }
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {filteredProduct ? filteredProduct.map((item:any)=>(
+              <tr key={item._id}>
+                <td>{item.title}</td>
+                <td className="category">{item.categories.map((item:string[], index:number)=>(
+                  <span key={index}>{item} </span>
+                ))}</td>
+                <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
+                <td>{item.producer}</td>
+                <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
+                <td>{`${item.price} ${item.currency}`}</td>
+                <td id="btn"><button><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}
+                ><AiFillEye title="Anzeigen"/></Link></button></td>
+                <td id="btn"><button onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
+              </tr>
+            ))
+            : currentProducts.map((item:any)=>(
+              <tr key={item._id}>
+                <td>{item.title}</td>
+                <td className="category">{item.categories.map((item:string[], index:number)=>(
+                  <span key={index}>{item} </span>
+                ))}</td>
+                <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
+                <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
+                <td>{`${item.price} ${item.currency}`}</td>
+                <td><button><Link to={`/showProduct/${item._id}`}><AiFillEye title="Anzeigen"/></Link></button></td>
+                <td id="btn"><button onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
+              </tr>
+            ))
+          }
+          </tbody>
+        </Table>
+      </TableWrapper>
       <Pagination
         total={products.length}
         limit={productsPerPage}

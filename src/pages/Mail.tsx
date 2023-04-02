@@ -58,9 +58,12 @@ const Mail = () => {
   const currentNewsletterOrders = newsletterOrders.slice(firstIndex, lastIndex);
   //mail
 const form = useRef<HTMLFormElement | null>(null);
+const serviceID = process.env.EMAIL_SERVICE_ID as string;
+const templateID = process.env.EMAIL_TEMPLATE_ID as string;
+const publicKey = process.env.EMAIL_PUBLIC_KEY as string;
   const sendEmail = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    emailjs.sendForm('service_5ek36y4', 'template_ei0n425', form.current!, 'Pp0kS4Y3yjdLZZIBs')
+    emailjs.sendForm( serviceID, templateID, form.current!, publicKey)
       .then((result:any) => {
           console.log(result.text);
           console.log("message sended")

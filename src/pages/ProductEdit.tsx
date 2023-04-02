@@ -4,15 +4,18 @@ import styled from 'styled-components';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import Spinner from '../components/Spinner';
 import { getProduct, updateProduct, reset } from '../features/products/productsSlice';
+import {small} from '../responsive';
 const Container = styled.div`
     width:100%;
 `;
 const Form = styled.form`
     width:100%;
     display:flex;
+    ${small({flexDirection:"column"})}
 `;
 const InputGroup = styled.div`
     width:50%;
+    ${small({width:"98%"})}
 `;
 const FormGroup = styled.div`
     display:flex;
@@ -55,6 +58,7 @@ const ButtonGroup = styled.div`
     display:flex;
     flex-direction:column;
     padding: 250px 20px;
+    ${small({padding:"5px", width:"80%"})}
 `;
 const UpdateButton = styled.button`
     background: var(--coffee);
@@ -104,7 +108,7 @@ const ProductEdit = () => {
     }
   }, [dispatch, isError, message, id]);
 
-   const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string} >({
+   const [formdata, setFormdata] = useState<{title:string, producer:string, categories:string[], desc:string, price:string, currency:string, colors:string[], sizes:string[], inStock:string, sale:string} >({
     title:"",
     producer:"",
     categories:[],
@@ -114,8 +118,9 @@ const ProductEdit = () => {
     colors:[],
     sizes:[],
     inStock:"",
+    sale:"",
   })
-  const {title, producer, categories, desc, price, currency, colors, sizes, inStock} = formdata;
+  const {title, producer, categories, desc, price, currency, colors, sizes, inStock, sale} = formdata;
   const [filedata, setFiledata] = useState<FileData>({
     image: null
   })
@@ -148,6 +153,7 @@ const ProductEdit = () => {
     colors:product.colors,
     sizes:product.sizes,
     inStock:product.inStock,
+    sale:product.sale,
       })
     }
   }, [product])
@@ -164,6 +170,7 @@ const ProductEdit = () => {
     productData.append("colors", JSON.stringify(formdata.colors));
     productData.append("sizes", JSON.stringify(formdata.sizes));
     productData.append("inStock", formdata.inStock);
+    productData.append("sale", formdata.sale);
     productData.append("image", filedata.image!);
    
     const updatedata:UpdateProductData = {
@@ -226,6 +233,10 @@ const ProductEdit = () => {
             <label htmlFor="inStock">Im Bestand</label>
             <input type="text" name="inStock" id="inStock" defaultValue={String(inStock)} onChange={(e)=>setFormdata({...formdata, inStock:e.target.value})}/>
           </FormGroup>
+          <FormGroup>
+          <label htmlFor="sale">Sale</label>
+          <input type="text" name="sale" id="sale" defaultValue={String(sale)} onChange={(e)=>setFormdata({...formdata, sale:e.target.value})}/>
+        </FormGroup>
           <FormGroup>
             <h3 className='datelable'>Erstellt am:</h3>
             <span>{new Date(product.createdAt).toLocaleDateString("de-De", {day:"numeric", month:"numeric", year:"numeric"})}</span>

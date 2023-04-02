@@ -7,16 +7,18 @@ import {useNavigate, useParams} from 'react-router-dom'
 import { toast } from 'react-toastify';
 import {getSliderItem, updateSliderItem} from '../features/sliderItems/sliderItemSlice'
 import Spinner from '../components/Spinner';
-
+import {small} from '../responsive';
 const Container = styled.div`
     width:100%;
 `;
 const Form = styled.form`
     width:100%;
     display:flex;
+    ${small({flexDirection:"column"})}
 `;
 const InputGroup = styled.div`
     width:50%;
+    ${small({width:"90%"})}
 `;
 const FormGroup = styled.div`
     display:flex;
@@ -60,6 +62,7 @@ const ButtonGroup = styled.div`
     display:flex;
     flex-direction:column;
     padding: 20px 20px;
+    ${small({width:"80%"})}
 `;
 const UpdateButton = styled.button`
     background: var(--coffee);
@@ -72,9 +75,9 @@ const UpdateButton = styled.button`
 -webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 `;
-
 const OkButton = styled.button`
     background: white;
+    margin:5px 20px;
     padding:10px;
     color: var(--darkGray);
     border:none;

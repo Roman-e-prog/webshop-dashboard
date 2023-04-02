@@ -15,7 +15,6 @@ const Container = styled.div`
 `;
 const TableWrapper = styled.div`
     width:100%;
-    overflow-x:"auto";
 `;
 const Table = styled.table`
 width:90%;
@@ -130,7 +129,7 @@ const User = () => {
         <SortButton onClick={handleAlphabet}>Alphabetisch sortieren</SortButton>
         <SortButton onClick={handleCity}>Nach Stadt sortieren</SortButton>
       </ButtonWrapper>
-        <TableWrapper>
+        <TableWrapper style={{overflowX:"auto"}}>
             <Table>
                 <thead>
                     <tr>
