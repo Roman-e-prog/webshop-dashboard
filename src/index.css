@@ -12,6 +12,10 @@
   background:var(--coffee);
   color:var(--white);
   }
+  .error{
+    color:red;
+    margin-top:2px;
+  }
 ul{
   list-style: none;
   margin: 0;
