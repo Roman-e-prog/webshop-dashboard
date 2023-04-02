@@ -65,7 +65,7 @@ const Login = () => {
         password:false,
         error:[],
     })
-console.log(formerror);
+
 useEffect(()=>{
     if(isError){
         toast.error(message);
@@ -128,21 +128,21 @@ const onSubmit = useCallback(
         <FormGroup>
             <label htmlFor='username'>Benutzername</label>
             <input type="text" name="username" id="username" required value={username} onChange={handleChange}/>
-            <div>
+            <div className='error'>
                 {formerror.username && <span>{formerror.username}</span>}
             </div>
         </FormGroup>
         <FormGroup>
             <label htmlFor='email'>E-mail</label>
             <input type="email" name="email" id="email" required  value={email} onChange={handleChange}/>
-            <div>
+            <div className='error'>
             {formerror.email && <span>{formerror.email}</span>}
             </div>
         </FormGroup>
         <FormGroup>
             <label htmlFor='password'>Password</label>
             <input type="password" name="password" id="password" required  value={password} onChange={handleChange}/>
-            <div>
+            <div className='error'>
             {formerror.password && <span>{formerror.password}</span>}
             </div>
         </FormGroup>
