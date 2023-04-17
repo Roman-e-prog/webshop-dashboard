@@ -26,9 +26,8 @@ const persistConfig = {
 }
 
 
-const persistedUserReducer = persistReducer(persistConfig,userReducer) //state we want to persist
+const persistedUserReducer = persistReducer(persistConfig,userReducer) 
 const persistedProductReducer = persistReducer(persistConfig, productsReducer)
-// const persistedSliderReducer = persistReducer(persistConfig, sliderItemsReducer)
 const persistedCartdataReducer = persistReducer(persistConfig, cartdataReducer )
 
 export const store = configureStore({
@@ -49,9 +48,9 @@ export const store = configureStore({
     },
   }).concat(logger),
 });
-console.log("InitalState", store.getState());
-const unsubscribe = store.subscribe(()=>console.log("updateState", store.getState()));
-unsubscribe();
+// console.log("InitalState", store.getState());
+// const unsubscribe = store.subscribe(()=>console.log("updateState", store.getState()));
+// unsubscribe();
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
