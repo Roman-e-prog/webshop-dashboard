@@ -15,6 +15,7 @@ const FormGroup = styled.div`
 `;
 const ButtonWrapper = styled.div``;
 const SendButton = styled.button``;
+
 const CreateNewsletter = (props:{sendEmail:any, newsletterOrders:object[], form:React.MutableRefObject<HTMLFormElement | null>}) => {
     const [newsletterOrderdata, setNewsletterOrderData] = useState<any>([]);
     
@@ -25,10 +26,10 @@ const CreateNewsletter = (props:{sendEmail:any, newsletterOrders:object[], form:
     
     const [formdata, setFormdata] = useState({
         ressort:"",
-        theme:"",
+        subject:"",
         message:"",
     })
-    const {ressort, theme, message} = formdata;
+    const {ressort, subject, message} = formdata;
     const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
         setFormdata((prevState)=>({
             ...prevState,
@@ -52,20 +53,25 @@ const CreateNewsletter = (props:{sendEmail:any, newsletterOrders:object[], form:
                 <label htmlFor='ressort'>Ressort</label>
                 <input type="text" name="ressort" id="ressort" value={ressort} onChange={(e)=>handleChange(e)}/>
             </FormGroup>
+              <FormGroup>
+                <label htmlFor="from_name">RAR Schumode</label>
+                <input type="text" name="from_name" id="from_name" defaultValue="RAR Schuhmode"/>
+            </FormGroup>
             <FormGroup>
-                <label htmlFor='theme'>Thema</label>
-                <input type="text" name="message" id="theme" value={theme}  onChange={(e)=>handleChange(e)}/>
+                <label htmlFor='subject'>Thema</label>
+                <input type="text" name="subject" id="subject" value={subject} placeholder="Thema" onChange={(e)=>handleChange(e)}/>
             </FormGroup>
             <FormGroup>
                 <label htmlFor='message'>Inhalt</label>
-                <textarea cols={10} rows={10} name="message" value={message}  onChange={(e)=>handleChange(e)}></textarea>
+                <textarea cols={10} rows={10} name="message" value={message} placeholder="Hier Artikel eingeben" onChange={(e)=>handleChange(e)}></textarea>
             </FormGroup>
             <FormGroup>
-                <label htmlFor='user_email'>E-Mail</label>
-                <input type="email" name="user_email" id="user_email" defaultValue={mail}/>
+                <label htmlFor='to_mail'>E-Mail</label>
+                <input type="email" name="to_mail" id="mail" defaultValue={mail} title="email"/>
             </FormGroup>
             <ButtonWrapper>
-                <SendButton onClick={handleEmail}>Absenden</SendButton>
+                <button type="button" onClick={handleEmail} title="Email-Adressen setzen">Adressen eingeben</button>
+                <SendButton title="Absenden" >Absenden</SendButton>
             </ButtonWrapper>
         </Form>
       </NewsletterWrapper>
