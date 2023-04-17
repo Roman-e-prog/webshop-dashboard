@@ -87,7 +87,7 @@ const UserInfo = () => {
                 <tr key={item._id}>
                   <td>{item.nachname}</td>
                   <td className="city">{item.city}</td>
-                  <td id="btn"><ShowButton><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}>Benutzer anzeigen</Link></ShowButton></td>
+                  <td id="btn"><ShowButton><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}} title="Benutzer anzeigen">Benutzer anzeigen</Link></ShowButton></td>
                 </tr>
                ))}
             
