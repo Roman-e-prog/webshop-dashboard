@@ -82,9 +82,9 @@ const MessagesEdit = (props:{ id:string, userMessage:string, editModal:boolean, 
       <Form onSubmit={onSubmit}>
         <FormGroup>
             <label htmlFor='userMessage'>Nachricht korrigieren</label>
-            <textarea cols={10} rows={10} name="userMessage" defaultValue={userMessage} onChange={(e)=>setFormdata({...formdata, userMessage: e.target.value})}></textarea>
-            <UpdateButton onClick={onSubmit}>Update</UpdateButton>
-            <CloseButton onClick={()=>props.setEditModal(false)}>Okay</CloseButton>
+            <textarea cols={10} rows={10} name="userMessage" defaultValue={userMessage} placeholder="Ihre Nachricht" onChange={(e)=>setFormdata({...formdata, userMessage: e.target.value})}></textarea>
+            <UpdateButton title="Update" onClick={onSubmit}>Update</UpdateButton>
+            <CloseButton onClick={()=>props.setEditModal(false)} title="Okay">Okay</CloseButton>
         </FormGroup>
       </Form>
     </Container>

@@ -33,53 +33,53 @@ const Sidebar = () => {
       <Menue>
         <MenueItem>
             <FaHome/>
-            <Link to="/" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Home</Link>
+            <Link to="/" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}} title="Home">Home</Link>
         </MenueItem>
 
         <MenueItem>
             <HiTrendingUp/>
-            <Link to="/sales" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Sales</Link>
+            <Link to="/sales" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}} title="Sales">Sales</Link>
         </MenueItem>
 
         <MenueItem>
             <MdTimeline/>
-            <Link to="/analytics" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Analytics</Link>
+            <Link to="/analytics" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}} title="Analytics">Analytics</Link>
         </MenueItem>
 
         <MenueItem>
             <FaMoneyBillWaveAlt/>
-            <Link to="/transactions" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Transaktionen</Link>
+            <Link to="/transactions" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}} title="Transaktionen">Transaktionen</Link>
         </MenueItem>
 
         <MenueItem>
             <MdOutlineBarChart/>
-            <Link to="/reports" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Reports</Link>
+            <Link to="/reports" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}} title="Reports">Reports</Link>
         </MenueItem>
 
         <MenueItem>
             <MdMailOutline/>
-            <Link to="/mail" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Mail</Link>
+            <Link to="/mail" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}} title="Mail">Mail</Link>
         </MenueItem>
 
         <MenueItem>
             <MdOutlineNotificationImportant/>
-            <Link to="/messages" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}}>Nachrichten</Link>
+            <Link to="/messages" className="link" style={{color:"var(--darkGray)", marginLeft:"5px"}} title="Nachrichten">Nachrichten</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/user" className="link" style={{color:"var(--darkGray)"}}>User</Link>
+            <Link to="/user" className="link" style={{color:"var(--darkGray)"}} title="User">User</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/products" className="link" style={{color:"var(--darkGray)"}}>Produkte</Link>
+            <Link to="/products" className="link" style={{color:"var(--darkGray)"}} title="Produkte">Produkte</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/sliderImage" className="link" style={{color:"var(--darkGray)"}}>Slider Bilder</Link>
+            <Link to="/sliderImage" className="link" style={{color:"var(--darkGray)"}} title="Slider Bilder">Slider Bilder</Link>
         </MenueItem>
 
         <MenueItem>
-            <Link to="/descriptionItems" className="link" style={{color:"var(--darkGray)"}}>Text Frontseite</Link>
+            <Link to="/descriptionItems" className="link" style={{color:"var(--darkGray)"}} title="Text Frontseite">Text Frontseite</Link>
         </MenueItem>
       </Menue>
     </Container>

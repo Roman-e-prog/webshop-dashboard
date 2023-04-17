@@ -72,11 +72,11 @@ const Revenue = (props:{month:string[]}) => {
         </TagesEinnahmen>
         <MonatsEinnahmen>
           <Title>{`Einnahmen im ${props.month[lastMonth-1]}`}</Title>
-          <Amount>{totalMonth} €</Amount>
+          <Amount>{totalMonth.toFixed(2)} €</Amount>
         </MonatsEinnahmen>
         <JahresEinnahmen>
           <Title>{`Einnahmen ${year}`}</Title>
-          <Amount>{totalYear} €</Amount>
+          <Amount>{totalYear.toFixed(2)} €</Amount>
         </JahresEinnahmen>
       </Einnahmen>
     </Container>

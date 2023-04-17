@@ -40,6 +40,11 @@ const FormGroup = styled.div`
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
     ${small({width:"80%"})}
   }
+  & #img{
+    width:250px;
+    height:175px;
+    marginTop:5px;
+  }
 `;
 const ButtonWrapper = styled.div`
   margin-top:10px;
@@ -72,14 +77,16 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
     inStock:"",
     sale:"",
   })
-  const {title, producer, categories, desc, price, currency, colors, sizes, inStock, sale} = formdata;
-  
-  const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>):void=>{
-    setFormdata((prevState)=>({
+  let {title, producer, categories, desc, price, currency, colors, sizes, inStock, sale} = formdata;
+  //dataset
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=> {
+    const { name, value } = e.target;
+
+    setFormdata((prevState) => ({
       ...prevState,
-      [e.target.name]:e.target.value
-    }))
-  }
+      [name]: value.includes(",") ? undefined : value,
+    }));
+  };
   const [filedata, setFiledata] = useState<FileData>({image:null});
   const [preview, setPreview] = useState<string | null>(null);
   const handleFileChange = (e:ChangeEvent<HTMLInputElement>)=>{
@@ -110,11 +117,11 @@ const CreateProduct = (props:{setProducts:React.Dispatch<any>}) => {
       colors:"",
       sizes:"",
       inStock:"",
+      sale:"",
   })
  
 const onSubmit = (e:React.FormEvent)=>{
   e.preventDefault();
-  console.log("I am triggerred")
   let errors = {...formerror};
     if(filedata.image === null){
      errors.image = "Sie müssen ein Bild eingeben"
@@ -131,7 +138,7 @@ const onSubmit = (e:React.FormEvent)=>{
     } else{
       errors.producer = "";
     }
-    if(!formdata.categories.length){
+    if(!formdata.categories.length || formdata.categories === undefined){
       errors.categories = "Bitte geben Sie die Kategorien nur mit Leerzeichen getrennt ein. Erst die Haupkategorie(z.B. Herren), dann die Unterkategorie(z.B. Sportschuhe)"
     }
      else{
@@ -152,14 +159,14 @@ const onSubmit = (e:React.FormEvent)=>{
     } else{
       errors.currency = "";
     }
-    if(!formdata.colors.length){
+    if(!formdata.colors.length || formdata.categories === undefined){
       errors.colors = "Bitte geben Sie die Farben in Englisch klein geschrieben nur mit Leerzeichen getrennt ein."
     }
     else{
       errors.colors = "";
     }
-    if(!formdata.sizes.length){
-      errors.sizes = "Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Erst muss ein Leerzeichen kommen"
+    if(!formdata.sizes.length || formdata.categories === undefined){
+      errors.sizes = "Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Am Anfang muss ein Leerzeichene stehen"
     }
     else{
       errors.sizes = ""
@@ -169,6 +176,11 @@ const onSubmit = (e:React.FormEvent)=>{
     } else{
       errors.inStock = "";
     }
+    if(formdata.sale ===  ""){
+      errors.sale = "Wenn Produkt im Angebot, true, ansonsten false eingeben"
+      } else{
+        errors.sale = "";
+      }
     if(Object.values(errors).every(x=>x === "")){
   const productData = new FormData();
   productData.append("title", formdata.title)
@@ -202,7 +214,7 @@ const onSubmit = (e:React.FormEvent)=>{
       <FormGroup>
           <label htmlFor='image'>Bild hochladen</label>
           <input type="file" name="image" id="image" required onChange={handleFileChange}/>
-          {preview && <img src={preview} alt="Preview" title="Preview" style={{width:"250px", height:"175px", marginTop:"5px"}}/>}
+          {preview && <img src={preview} alt="Preview" title="Preview" id="img"/>}
           <div className='error'>
                {formerror.image && <span>{formerror.image}</span>}
             </div>
@@ -216,14 +228,14 @@ const onSubmit = (e:React.FormEvent)=>{
         </FormGroup>
         <FormGroup>
           <label htmlFor='producer'>Hersteller</label>
-          <input type="text" name="producer" id="producer" required value={producer}  onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="producer" id="producer" required value={producer} onChange={(e)=>handleChange(e)}/>
           <div className='error'>
                 {formerror.producer && <span>{formerror.producer}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='categories'>Kategorien</label>
-          <input type="text" name="categories" id="categories" required value={categories}  onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="categories" id="categories" required value={categories} onChange={(e)=>handleChange(e)}/>
           <p>Bitte geben Sie die Kategorien nur mit Leerzeichen getrennt ein. Erst die Haupkategorie(z.B. Herren), dann die Unterkategorie(z.B. Sportschuhe)</p>
           <div className='error'>
                 {formerror.categories && <span>{formerror.categories}</span>}
@@ -231,28 +243,28 @@ const onSubmit = (e:React.FormEvent)=>{
         </FormGroup>
         <FormGroup>
           <label htmlFor='desc'>Beschreibung</label>
-          <textarea cols={10} rows={10} name="desc" required value={desc}  onChange={(e)=>handleChange(e)}></textarea>
+          <textarea cols={10} rows={10} name="desc" required value={desc} placeholder="Produktbescheibung" onChange={(e)=>handleChange(e)}></textarea>
           <div className='error'>
                 {formerror.desc && <span>{formerror.desc}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='price'>Preis</label>
-          <input type="text" name="price" id="price" required value={price}  onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="price" id="price" required value={price} onChange={(e)=>handleChange(e)}/>
           <div className='error'>
                 {formerror.price && <span>{formerror.price}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='currency'>Währung</label>
-          <input type="text" name="currency" id="currency" required value={currency}  onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="currency" id="currency" required value={currency} onChange={(e)=>handleChange(e)}/>
           <div className='error'>
                 {formerror.currency && <span>{formerror.currency}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='colors'>Farben</label>
-          <input type="text" name="colors" id="colors" required value={colors}  onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="colors" id="colors" required value={colors} onChange={(e)=>handleChange(e)}/>
           <p>Bitte geben Sie die Farben in Englisch klein geschrieben nur mit Leerzeichen getrennt ein.</p>
           <div className='error'>
                 {formerror.colors && <span>{formerror.colors}</span>}
@@ -260,22 +272,27 @@ const onSubmit = (e:React.FormEvent)=>{
         </FormGroup>
         <FormGroup>
           <label htmlFor='sizes'>Größen</label>
-          <input type="text" name="sizes" id="sizes" required value={sizes}  onChange={(e)=>handleChange(e)}/>
-          <p>Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Erst muss ein Leerzeichen kommen</p>
-        </FormGroup>
-        <div className='error'>
+          <input type="text" name="sizes" id="sizes" required value={sizes} onChange={(e)=>handleChange(e)}/>
+          <p>Bitte geben Sie die Größen nur mit Leerzeichen getrennt ein. Am Anfang muss ein Leerzeichen stehen.</p>
+          <div className='error'>
                 {formerror.sizes && <span>{formerror.sizes}</span>}
             </div>
+        </FormGroup>
         <FormGroup>
           <label htmlFor='inStock'>Im Bestand</label>
-          <input type="text" name="inStock" id="inStock" required value={inStock}  onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="inStock" id="inStock" required value={inStock} onChange={(e)=>handleChange(e)}/>
+          <p>Wenn im Bestand, geben Sie bitte true ein, ansonsten false.</p>
           <div className='error'>
                 {formerror.inStock && <span>{formerror.inStock}</span>}
             </div>
         </FormGroup>
         <FormGroup>
           <label htmlFor='sale'>Sale</label>
-          <input type="text" name="sale" id="sale" value={sale}  onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="sale" id="sale" required value={sale} onChange={(e)=>handleChange(e)}/>
+          <p>Wenn im Angebot, geben Sie bitte true ein, ansonsten false.</p>
+          <div className='error'>
+                {formerror.sale && <span>{formerror.sale}</span>}
+            </div>
         </FormGroup>
         <ButtonWrapper>
           <Button onClick={onSubmit}>Absenden</Button>
