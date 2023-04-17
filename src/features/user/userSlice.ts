@@ -100,20 +100,7 @@ export const getAllUser = createAsyncThunk<User[], void, AsyncThunkConfig>('/use
       return thunkAPI.rejectWithValue(message as string)
     }
 })
-export const getUserStats = createAsyncThunk<User[], void, AsyncThunkConfig>('/user/stats', async (_, thunkAPI)=>{
-  try{
-      const token:string = thunkAPI.getState().auth.user!.accessToken;
-      return await userService.getUserStats(token);
-  }catch (error:any) {
-    const message =
-      (error.response &&
-        error.response.data &&
-        error.response.data.message) ||
-      error.message ||
-      error.toString()
-    return thunkAPI.rejectWithValue(message as string)
-  }
-})
+
 export const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -171,19 +158,6 @@ export const userSlice = createSlice({
         state.allUser = action.payload;
       })
       .addCase(getAllUser.rejected, (state, action:any)=>{
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-      .addCase(getUserStats.pending, (state)=>{
-        state.isLoading = true;
-      })
-      .addCase(getUserStats.fulfilled, (state, action)=>{
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.userStats = action.payload;
-      })
-      .addCase(getUserStats.rejected, (state, action:any)=>{
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

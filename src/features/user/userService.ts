@@ -40,21 +40,12 @@ const getAllUser = async (token:string)=>{
     const response = await axios.get(API_URL + 'find', config);
     return response.data;
 }
-const getUserStats = async (token:string)=>{
-    const config = {
-        headers:{
-            token:`Bearer ${token}`
-        }
-    }
-    const response = await axios.get(API_URL + 'stats', config);
-    return response.data;
-}
+
 
 const userService = {
     updateUser,
     deleteUser,
     getUser,
     getAllUser,
-    getUserStats
 }
 export default userService;
