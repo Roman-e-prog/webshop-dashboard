@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast, ToastContainer } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { getAllUser } from '../features/user/userSlice';
+import { deleteUser, getAllUser } from '../features/user/userSlice';
 import Spinner from '../components/Spinner';
 import { Link } from 'react-router-dom';
 import {AiFillEye, AiFillDelete} from 'react-icons/ai';
@@ -94,7 +94,12 @@ const User = () => {
  const filteredUser = user.filter((item:object)=>{
    return Object.values(item).join('').toLowerCase().includes(searchValue.toLowerCase())
  }).slice(firstIndex, lastIndex);
- //sort
+ //delete
+ const handleDelete = async (id:string)=>{
+  await dispatch(deleteUser(id));
+   dispatch(getAllUser());
+   setUser(allUser);
+ }
  //sort
  const handleDefault = ()=>{
     setUser([...user].sort((a,b)=>a.createdAt < b.createdAt ? -1 : 1));
@@ -124,10 +129,10 @@ const User = () => {
         <ToastContainer/>
         <Search callback={(searchValue:string)=>setSearchValue(searchValue)} />
         <ButtonWrapper>
-        <SortButton onClick={handleDefault}>Standard</SortButton>
-        <SortButton onClick={handleNew}>Neueste zuerst</SortButton>
-        <SortButton onClick={handleAlphabet}>Alphabetisch sortieren</SortButton>
-        <SortButton onClick={handleCity}>Nach Stadt sortieren</SortButton>
+        <SortButton title="standard" onClick={handleDefault}>Standard</SortButton>
+        <SortButton title="Neueste zuerst" onClick={handleNew}>Neueste zuerst</SortButton>
+        <SortButton title="Alphabetisch" onClick={handleAlphabet}>Alphabetisch sortieren</SortButton>
+        <SortButton title="Nach Stadt" onClick={handleCity}>Nach Stadt sortieren</SortButton>
       </ButtonWrapper>
         <TableWrapper style={{overflowX:"auto"}}>
             <Table>
@@ -146,16 +151,16 @@ const User = () => {
                             <td>{item.nachname}</td>
                             <td className="customerNumber">{item._id}</td>
                             <td>{item.city}</td>
-                            <td className='btn'><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)"}}><AiFillEye title="Anzeigen"/></Link></button></td>
-                            <td className='btn'><button><AiFillDelete title="Löschen"/></button></td>
+                            <td className='btn'><button type="button" title="Anzeigen"><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                            <td className='btn'><button type="submit" title="Löschen" onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
                         </tr>)) :
                         currentUser.map((item:any)=>(
                             <tr key={item._id}>
                                 <td>{item.nachname}</td>
                                 <td className="customerNumber">{item._id}</td>
                                 <td>{item.city}</td>
-                                <td className='btn'><button><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)"}}><AiFillEye title="Anzeigen"/></Link></button></td>
-                                <td className='btn'><button><AiFillDelete title="Löschen"/></button></td>
+                                <td className='btn'><button type="button" title="Anzeigen"><Link to={`/showUser/${item._id}`} className="link" style={{color:"var(--white)"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                                <td className='btn'><button type="submit" title="Löschen" onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
                             </tr>
                     ))}
                 </tbody>

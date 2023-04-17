@@ -3,9 +3,10 @@ import React, { ChangeEvent } from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { useState, useEffect } from 'react';
-import {useNavigate, useParams} from 'react-router-dom'
-import { toast } from 'react-toastify';
-import {getSliderItem, updateSliderItem} from '../features/sliderItems/sliderItemSlice'
+import {useNavigate, useParams} from 'react-router-dom';
+import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from 'react-toastify';
+import {getSliderItem, updateSliderItem, reset} from '../features/sliderItems/sliderItemSlice'
 import Spinner from '../components/Spinner';
 import {small} from '../responsive';
 const Container = styled.div`
@@ -105,6 +106,9 @@ const SliderItemsEdit = () => {
       toast.error(message)
     }
     dispatch(getSliderItem(id!));
+    return ()=>{
+      dispatch(reset());
+    }
   }, [dispatch,isError, message, id]);
 
   const [formdata, setFormdata] = useState<{title:string, alt:string}>({
@@ -156,14 +160,16 @@ const updatePreview = (file:File)=>{
       id:id!,
     }
     dispatch(updateSliderItem(updateSliderData));
-
+    return ()=>{
+      dispatch(reset());
+    }
   }
-
   if(isLoading){
     return <Spinner/>
   }
   return (
     <Container>
+      <ToastContainer/>
         <Form onSubmit={onSubmit}>
           <InputGroup>
             <FormGroup>

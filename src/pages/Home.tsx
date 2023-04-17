@@ -3,14 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
-import Chart from '../components/Chart';
 import Revenue from '../components/Revenue';
 import Transactions from '../components/Transactions';
 import UserInfo from '../components/UserInfo';
-import { useEffect, useState, useMemo} from 'react';
-import { getUserStats } from '../features/user/userSlice';
+import { useEffect, useMemo} from 'react';
+
 import {small} from '../responsive';
+import TownTurnAround from '../components/TownTurnAround';
 const Container = styled.div`
+  width:100%;
+`;
+const Middle = styled.div`
   width:100%;
 `;
 const ZusatzInfos = styled.div`
@@ -27,46 +30,32 @@ const Home:React.FC = () => {
       navigate('/');
     }
   },[dispatch, user?.isAdmin, navigate])
-//chart
-const activeUser = useAppSelector((state)=>state.user.userStats);
-const [stats, setStats] = useState<any>([]);
-useEffect(()=>{
-  dispatch(getUserStats())
-},[dispatch]);
+
 const Month = useMemo(
   () => [
     "Jan",
     "Feb",
     "Mar",
     "Apr",
-    "May",
+    "Mai",
     "Jun",
     "Jul",
-    "Agu",
+    "Aug",
     "Sep",
-    "Oct",
+    "Okt",
     "Nov",
-    "Dec",
+    "Dez",
   ],
   []
 );
-
-useEffect(()=>{
-      activeUser.map((item)=>setStats((prev:any)=>[...prev, {name:Month[parseInt(item._id!)-1], "Active User": item.total}]))
-      //eslint-disable-next-line
-},[]);
-
   return (
     <Container>
       <Revenue
       month={Month}
       />
-      <Chart 
-      userdata ={stats}
-      title = "User Analyse"
-      grid
-      dataKey={"Active User"}
-      />
+      <Middle>
+        <TownTurnAround/>
+      </Middle>
       <ZusatzInfos>
         <UserInfo/>
         <Transactions/>

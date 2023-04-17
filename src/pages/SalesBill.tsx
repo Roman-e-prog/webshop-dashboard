@@ -50,6 +50,13 @@ const CompanyAdress = styled.div`
   flex:1;
   display:flex;
   flex-direction:column;
+
+  & #companyName{
+    font-weight:600;
+  }
+  & #companEmail{
+    margin:4px 0;
+  }
 `;
 const ClientAdress = styled.div`
   flex:1;
@@ -59,6 +66,9 @@ const ClientAdress = styled.div`
   & .street{
     display:flex;
     margin-top: 4px;
+  }
+  & span{
+    margin-right:2px;
   }
 `;
 const ContentWrapper = styled.div`
@@ -189,19 +199,19 @@ const SalesBill = () => {
             <ClientAdress>
                 <span>{client?.vorname} {client?.nachname}</span>
                 <div className="street">
-                  <span style={{marginRight:"2px"}}>{client?.street}</span>
+                  <span>{client?.street}</span>
                   <span>{client?.number}</span>
                 </div>
                 <div className='street'>
-                  <span style={{marginRight:"2px"}}>{client?.plz}</span>
+                  <span>{client?.plz}</span>
                   <span>{client?.city}</span>
                 </div>
                 <ClientNumber><span>Kundennummer: </span><span id="clientnumber">{client?._id}</span></ClientNumber>
                   <BillNumber><span>Rechungsnummer: </span><span id="billnumber">{copyCartdata._id}</span></BillNumber>
             </ClientAdress>
             <CompanyAdress>
-              <span style={{fontWeight:"600"}}>RAR Schuhmode</span>
-              <span style={{margin:"4px 0"}}>Schuhmode@rar.de</span>
+              <span id="companyName">RAR Schuhmode</span>
+              <span id="companyEmail">Schuhmode@rar.de</span>
               <span>01234/12345</span>
             </CompanyAdress>
           </AdressWrapper>

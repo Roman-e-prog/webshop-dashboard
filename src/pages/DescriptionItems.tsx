@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {useState, useEffect, useCallback} from 'react';
@@ -31,6 +31,12 @@ const Table = styled.table`
     ${middle({fontSize:"12px"})}
     ${small({minWidth:"200px"})}
   }
+  & #itemTitle{
+    width:20%;
+  }
+  & #itemText{
+    width:60%;
+  }
   & .smallNone{
     width:10%;
     ${small({display:"none"})}
@@ -43,7 +49,7 @@ const Table = styled.table`
     ${middle({fontSize:"12px"})}
     ${small({width:"200px"})}
   }
-  & #btn{
+  & .btn{
     border:none;
     font-size:20px;
   }
@@ -169,8 +175,8 @@ const DescriptionItems = () => {
       <Table>
           <thead>
               <tr>
-                <th style={{width:"20%"}}>Titel</th>
-                <th style={{width:"60%"}}>Text</th>
+                <th id="itemTitle">Titel</th>
+                <th id="itemText">Text</th>
                 <th className="smallNone">Daten Anzeige</th>
                 <th className="smallNone">Löschen</th>
               </tr>
@@ -180,8 +186,8 @@ const DescriptionItems = () => {
               <tr key={item._id}>
                 <td>{item.title}</td>
                 <td>{item.text}</td>
-                <td id="btn"><button><Link to={`/showDescriptionItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}><AiFillEye title="Anzeigen"/></Link></button></td>
-                <td id="btn"><button onClick={()=>handleDelete(item._id!)}><AiFillDelete title="Löschen"/></button></td>
+                <td className="btn"><button type="button" title="Einzelanzeige"><Link to={`/showDescriptionItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                <td className="btn"><button type="submit" title="Löschen" onClick={()=>handleDelete(item._id!)}><AiFillDelete title="Löschen"/></button></td>
               </tr>
             ))} 
           </tbody>
@@ -203,7 +209,7 @@ const DescriptionItems = () => {
             </div>
         </FormGroup>
         <ButtonWrapper>
-          <SendButton onClick={onSubmit}>Absenden</SendButton>
+          <SendButton title="Absenden" type="submit" onClick={onSubmit}>Absenden</SendButton>
         </ButtonWrapper>
       </Form>
     </Container>

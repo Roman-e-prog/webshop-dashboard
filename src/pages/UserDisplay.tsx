@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-// import { toast } from 'react-toastify';
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { RootState } from '../app/store';
-// import Spinner from '../components/Spinner';
 import {getUser, updateUser, reset} from '../features/user/userSlice';
+import {small} from '../responsive';
 const Container = styled.div`
     width:100%;
 `;
 const Form = styled.form`
     width:100%;
     display:flex;
+    ${small({flexDirection:"column"})}
 `;
 const InputGroup = styled.div`
     width:50%;
+    ${small({width:"98%"})}
 `;
 const FormGroup = styled.div`
     display:flex;
@@ -55,6 +56,7 @@ const ButtonGroup = styled.div`
     display:flex;
     flex-direction:column;
     padding: 250px 20px;
+    ${small({padding:"5px", width:"80%"})}
 `;
 const UpdateButton = styled.button`
     background: var(--coffee);
@@ -71,6 +73,7 @@ const UpdateButton = styled.button`
 const OkButton = styled.button`
     background: white;
     padding:10px;
+    margin:5px 20px;
     color: var(--darkGray);
     border:none;
     cursor: pointer;
@@ -78,10 +81,7 @@ const OkButton = styled.button`
 -webkit-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 -moz-box-shadow: -2px 4px 13px -3px rgba(0,0,0,0.67);
 `;
-// interface Props{
-//     userType:User extends InitialState,
-//     setFormdata:React.Dispatch<React.SetStateAction<object>>
-// }
+//typescript
 export interface UpdateData{
     userData:object,
     id:string
@@ -150,9 +150,7 @@ const UserDisplay:React.FC = () => {
             dispatch(reset());
         }
     }
-    // if(isLoading){
-    //     return <Spinner/>
-    // }
+
   return (
     <Container>
       <Form onSubmit={onSubmit}>

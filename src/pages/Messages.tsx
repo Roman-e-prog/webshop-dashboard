@@ -65,11 +65,11 @@ const PersonalNachrichten = styled.div`
     border-radius:5px;
     color:var(--white);
   }
-  & #crudIcons{
+  & .crudIcons{
     width:100%;
     height:20px;
   }
-  & #content{
+  & .content{
     margin-top:2px;
     width:100%;
     padding:5px 0;
@@ -230,10 +230,10 @@ const Messages = () => {
         <PersonalNachrichten>
           {personalMessage && personalMessage.map((item)=>(
             <div key={item._id}>
-              <div id="crudIcons">
+              <div className="crudIcons">
                 {ownMessage && <div id="icons"><CiEdit style={{marginRight:"4px"}} onClick={()=>handleEdit(item._id!, item.userMessage)}/><MdDeleteForever onClick={()=>handleDelete(item._id!)}/></div>}
                 </div>
-              <div id="content">
+              <div className="content">
                 <h3>Nachricht von: {item.sendUsername}</h3>
                 <p>{item.userMessage}</p>
               </div>
@@ -267,11 +267,11 @@ const Messages = () => {
         <h3>{username && `Nachricht wird gesendet an ${username}`}</h3>
 
         <MessageForm onSubmit={onSubmit}>
-           <textarea cols={10} rows={10} name="userMessage" value={userMessage} onChange={(e)=>handleChange(e)}></textarea>
+           <textarea cols={10} rows={10} name="userMessage" value={userMessage} placeholder="message"onChange={(e)=>handleChange(e)}></textarea>
            <div>
-           {formerror ? <span style={{color:"red"}}>{formerror}</span>: null}
+           {formerror ? <span className="error">{formerror}</span>: null}
            </div>
-           <button>Absenden</button>
+           <button type="submit" title="Absenden">Absenden</button>
         </MessageForm> 
       </WriteMessage>
     </Container>

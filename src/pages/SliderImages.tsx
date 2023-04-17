@@ -38,7 +38,7 @@ const Table = styled.table`
     padding:2px;
     ${small({fontSize:"12px"})}
   }
-  & #btn{
+  & .btn{
     border:none;
   }
   & button{
@@ -47,6 +47,17 @@ const Table = styled.table`
     padding:4px;
     border:none;
     margin-left:10px;
+  }
+  & .image{
+    widht:200px;
+    height:100px;
+    ${small({width:"100px", height:"50px"})}
+
+    & #image{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
   }
 `;
 const Form = styled.form`
@@ -178,11 +189,11 @@ const onSubmit = (e:React.FormEvent)=>{
           <tbody>
             {sliderItems && sliderItems.map((item)=>(
               <tr key={item._id}>
-                <td id="image"><img src={item.img} alt={item.alt} title={item.title} style={{width:"200px", height:"100px"}}/></td>
+                <td className='image'><img id="image" src={item.img} alt={item.alt} title={item.title}/></td>
                 <td>{item.alt}</td>
                 <td>{item.title}</td>
-                <td id="btn"><button><Link to={`/showSliderItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}><AiFillEye title="Anzeigen"/></Link></button></td>
-                <td id="btn"><button onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
+                <td className="btn"><button type="button" title="Anzeigen"><Link to={`/showSliderItem/${item._id}`} className="link" style={{color:"var(--white)", display:"block"}}><AiFillEye title="Anzeigen"/></Link></button></td>
+                <td className="btn"><button type="submit" title="löschen" onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
               </tr>
             ))}
           </tbody>
@@ -192,7 +203,7 @@ const onSubmit = (e:React.FormEvent)=>{
         <FormGroup>
           <label htmlFor='img'>Bild hochladen</label>
           <input type="file" name="img" id="img" required onChange={handleFileChange}/>
-          {preview && <img src={preview} alt="Preview" title="Preview" style={{width:"200px", height:"100px", marginTop:"5px"}}/>}
+          {preview && <img className='image' src={preview} alt="Preview" title="Preview"/>}
         </FormGroup>
         <FormGroup>
           <label htmlFor='alt'>Vorgelesener Text</label>

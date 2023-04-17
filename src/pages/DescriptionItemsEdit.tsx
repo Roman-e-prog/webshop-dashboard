@@ -143,7 +143,7 @@ const DescriptionItemsEdit = () => {
             </FormGroup>
             <FormGroup>
                 <label htmlFor='text'>Text</label>
-                <textarea rows={10} cols={10} name="text" required defaultValue={text}  onChange={(e)=>setFormdata({...formdata, text:e.target.value})}></textarea>
+                <textarea rows={10} cols={10} name="text" required defaultValue={text} placeholder="text"  onChange={(e)=>setFormdata({...formdata, text:e.target.value})}></textarea>
             </FormGroup>
             <FormGroup>
                 <h3 className='dateLable'>Erstellt am:</h3>
@@ -155,10 +155,10 @@ const DescriptionItemsEdit = () => {
             </FormGroup>
         </InputGroup>
         <ButtonGroup>
-            <UpdateButton onClick={onSubmit}>Update</UpdateButton>
+            <UpdateButton onClick={onSubmit} title="Update">Update</UpdateButton>
         </ButtonGroup>
       </Form>
-      <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
+      <OkButton onClick={()=>navigate(-1)} title="Okay">Okay</OkButton>
       
     </Container>
   )

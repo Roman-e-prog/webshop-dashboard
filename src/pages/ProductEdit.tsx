@@ -211,7 +211,7 @@ const ProductEdit = () => {
           </FormGroup>
           <FormGroup>
             <label htmlFor="desc">Produktbeschreibung</label>
-            <textarea name="desc" cols={10} rows={10} required defaultValue={desc} onChange={(e)=>setFormdata({...formdata, desc:e.target.value})}></textarea>
+            <textarea name="desc" cols={10} rows={10} required defaultValue={desc} placeholder="Produktbeschreibung" onChange={(e)=>setFormdata({...formdata, desc:e.target.value})}></textarea>
           </FormGroup>
           <FormGroup>
             <label htmlFor="price">Preis</label>
@@ -247,10 +247,10 @@ const ProductEdit = () => {
           </FormGroup>
           </InputGroup>
           <ButtonGroup>
-            <UpdateButton>Update</UpdateButton>
+            <UpdateButton title="Update">Update</UpdateButton>
           </ButtonGroup>
         </Form>
-        <OkButton onClick={()=>navigate(-1)}>Okay</OkButton>
+        <OkButton onClick={()=>navigate(-1)} title="Okay">Okay</OkButton>
     </Container>
   )
 }

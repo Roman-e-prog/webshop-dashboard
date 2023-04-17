@@ -58,16 +58,17 @@ const Mail = () => {
   const currentNewsletterOrders = newsletterOrders.slice(firstIndex, lastIndex);
   //mail
 const form = useRef<HTMLFormElement | null>(null);
-const serviceID = process.env.EMAIL_SERVICE_ID as string;
-const templateID = process.env.EMAIL_TEMPLATE_ID as string;
-const publicKey = process.env.EMAIL_PUBLIC_KEY as string;
+const serviceID = process.env.REACT_APP_EMAIL_SERVICE_ID as string;
+const templateID = process.env.REACT_APP_EMAIL_TEMPLATE_ID as string;
+const publicKey = process.env.REACT_APP_EMAIL_PUBLIC_KEY as string;
+console.log(form.current);
   const sendEmail = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     emailjs.sendForm( serviceID, templateID, form.current!, publicKey)
       .then((result:any) => {
           console.log(result.text);
           console.log("message sended")
-          e.currentTarget.reset()
+          form.current!.reset()
       }, (error:any) => {
           console.log(error.text);
       });
@@ -85,7 +86,7 @@ const publicKey = process.env.EMAIL_PUBLIC_KEY as string;
                 <th>Vorname</th>
                 <th>Nachname</th>
                 <th>E-mail</th>
-                <th>Thema</th>
+                <th>Ressort</th>
               </tr>
             </thead>
             <tbody>

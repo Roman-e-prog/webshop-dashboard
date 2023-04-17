@@ -39,7 +39,7 @@ const Table = styled.table`
     padding:2px;
     ${middle({fontSize:"12px", marginRight:"2px"})}
   }
-  & #btn{
+  & .btn{
     border:none;
   }
   & button{
@@ -48,6 +48,10 @@ const Table = styled.table`
     padding:4px;
     border:none;
     margin-left:10px;
+  }
+  & .img{
+    width:75px;
+    height:50px;
   }
 `;
 const ButtonWrapper = styled.div`
@@ -161,13 +165,13 @@ const message = useAppSelector((state)=>state.products.message);
                 <td className="category">{item.categories.map((item:string[], index:number)=>(
                   <span key={index}>{item} </span>
                 ))}</td>
-                <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
+                <td><img className="img" src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')}/></td>
                 <td>{item.producer}</td>
                 <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
                 <td>{`${item.price} ${item.currency}`}</td>
-                <td id="btn"><button><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}
+                <td className="btn"><button type="button" title="Anzeigen"><Link to={`/showProduct/${item._id}`} className="link" style={{color:"var(--white)"}}
                 ><AiFillEye title="Anzeigen"/></Link></button></td>
-                <td id="btn"><button onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
+                <td className="btn"><button type="submit" title="Löschen" onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
               </tr>
             ))
             : currentProducts.map((item:any)=>(
@@ -176,11 +180,11 @@ const message = useAppSelector((state)=>state.products.message);
                 <td className="category">{item.categories.map((item:string[], index:number)=>(
                   <span key={index}>{item} </span>
                 ))}</td>
-                <td><img src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')} style={{width:"75px", height:"50px"}}/></td>
+                <td><img className="img" src={item.image} alt={item.categories.join(', ')} title={item.categories.join(', ')}/></td>
                 <td>{String(item.inStock).includes('true') && <span>Ja</span>}</td>
                 <td>{`${item.price} ${item.currency}`}</td>
-                <td><button><Link to={`/showProduct/${item._id}`}><AiFillEye title="Anzeigen"/></Link></button></td>
-                <td id="btn"><button onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
+                <td><button type="button" title="Anzeigen"><Link to={`/showProduct/${item._id}`}><AiFillEye title="Anzeigen"/></Link></button></td>
+                <td id="btn"><button type="submit" title="Löschen" onClick={()=>handleDelete(item._id)}><AiFillDelete title="Löschen"/></button></td>
               </tr>
             ))
           }
