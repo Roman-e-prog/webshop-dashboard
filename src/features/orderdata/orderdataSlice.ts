@@ -16,10 +16,16 @@ export interface Orderdata{
     month?:number,
     day?:number,
 }
+export interface TownAnalyse{
+    _id:{city:string, plz:string},
+    totalNetto:number,
+    userCount:number,
+}
 export interface InitialState{
     orderdata: Orderdata,
     allOrderdata:Orderdata[],
     income:Orderdata[],
+    townAnalyse:TownAnalyse[],
     isLoading:boolean,
     isSuccess:boolean,
     isError:boolean,
@@ -29,6 +35,7 @@ const initialState:InitialState = {
     orderdata:{} as Orderdata,
     allOrderdata:[],
     income:[],
+    townAnalyse:[],
     isLoading:false,
     isSuccess:false,
     isError:false,
@@ -96,6 +103,20 @@ export const getIncome = createAsyncThunk<Orderdata[], void, AsyncThunkConfig>('
       return thunkAPI.rejectWithValue(message as string)
     }   
 })
+export const getTownAnalyse = createAsyncThunk<TownAnalyse[],void,AsyncThunkConfig>('orderdata/townanalyse', async (_, thunkAPI)=>{
+    try{
+        const token = thunkAPI.getState().auth.user!.accessToken;
+        return await orderdataService.getTownAnalyse(token)
+    } catch (error:any){
+        const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message as string)
+    }   
+})
 
 export const orderdataSlice = createSlice({
     name:"orderdata",
@@ -151,6 +172,19 @@ export const orderdataSlice = createSlice({
             state.income = action.payload;
         })
         .addCase(getIncome.rejected, (state,action)=>{
+            state.isLoading = false;
+            state.isError = true;
+            state.message = action.payload as string;
+        })
+        .addCase(getTownAnalyse.pending, (state)=>{
+            state.isLoading = true;
+        })
+        .addCase(getTownAnalyse.fulfilled, (state, action)=>{
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.townAnalyse = action.payload;
+        })
+        .addCase(getTownAnalyse.rejected, (state,action)=>{
             state.isLoading = false;
             state.isError = true;
             state.message = action.payload as string;

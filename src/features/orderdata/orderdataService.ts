@@ -40,10 +40,20 @@ const getIncome = async (token:string)=>{
     const response = await axios.get(API_URL + 'income', config)
     return response.data;
 }
+const getTownAnalyse = async (token:string)=>{
+    const config = {
+        headers:{
+            token: `Bearer ${token}`
+        }
+    }
+    const response = axios.get(API_URL+ 'townAnalyse', config);
+    return (await response).data;
+}
 const orderdataService = {
     deleteOrderdata,
     getOrderdata,
     getAllOrderdata,
     getIncome,
+    getTownAnalyse,
 }
 export default orderdataService;

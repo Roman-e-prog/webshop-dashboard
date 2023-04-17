@@ -47,6 +47,7 @@ export const createSliderItem = createAsyncThunk<SliderItem, FormData, AsyncThun
 export const updateSliderItem = createAsyncThunk<SliderItem, UpdateSliderItemsData, AsyncThunkConfig>('/sliderItems/update', async (updateSliderData, thunkAPI)=>{
     try{
         const token = thunkAPI.getState().auth.user!.accessToken;
+        console.log(updateSliderData)
         return sliderItemService.updateSliderItem(updateSliderData, token);
     }catch (error:any) {
       const message =
