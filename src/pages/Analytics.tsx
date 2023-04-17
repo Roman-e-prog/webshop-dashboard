@@ -8,7 +8,7 @@ const Analytics = () => {
 
   return (
     <Container>
-      Analytics
+      Reserved for google Analytics
     </Container>
   )
 }
